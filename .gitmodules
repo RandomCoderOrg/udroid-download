@@ -1,0 +1,4 @@
+[submodule "fs-cook"]
+	path = fs-cook
+	url = https://github.com/RandomCoderOrg/fs-cook
+	branch = master
