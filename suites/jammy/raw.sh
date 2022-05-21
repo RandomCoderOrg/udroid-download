@@ -20,7 +20,7 @@ ENABLE_USER_SETUP=false
 additional_setup() {
 
 # update sources.list
-cat <<-  EOF > $chroot_dir/etc/apt/sources.list
+cat <<-EOF >$chroot_dir/etc/apt/sources.list
 # See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
 # newer versions of the distribution.
 deb $MIRROR $SUITE main restricted
@@ -56,20 +56,23 @@ EOF
 
 }
 
-shout "Bootstrapping $SUITE...."
-do_build 	    "${frn}-arm64" arm64
-do_build 	    "${frn}-armhf" armhf
-do_build 	    "${frn}-amd64" amd64
+# Option to build specific arch
+# arch name as $1
 
-shout "packing up the raw file systems..."
-do_compress     "${frn}-arm64"
-do_compress    	"${frn}-armhf"
-do_compress     "${frn}-amd64"
+case $1 in
+arm64 | armhf | amd64) _arch="$1" ;;
+all | -a) _arch="armhf arm64 amd64" ;;
+*) die "Unknown arch option [ Allowed: arm64, armhf, amd64, all(for all 3) ]" ;;
+esac
 
-shout "unmounting the raw file systems from host..."
-do_unmount 	    "${frn}-arm64"
-do_unmount 	    "${frn}-armhf"
-do_unmount 	    "${frn}-amd64"
+for arch in ${_arch}; do
+    shout "Bootstrapping $SUITE [${arch}] ...."
+    do_build "${frn}-${arch}" "${arch}"
+    shout "packing up the raw file systems..."
+    do_compress "${frn}-${arch}"
+    shout "unmounting the raw file systems from host..."
+    do_unmount "${frn}-${arch}"
+done
 
 shout "Build Complete.."
 ls ${frn}*tar*
