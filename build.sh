@@ -85,6 +85,9 @@ function _help() {
     msg "(C) RandomCoderOrg"
 }
 
+function _version() {
+    msg "udroid-download build tool V$VERSION"
+}
 
 while (($# > 0)); do
     case $1 in
