@@ -69,6 +69,22 @@ function _list() {
     done
 }
 
+function _help() {
+    msg "udroid-download build tool V$VERSION"
+    msg "USAGE: ${0} [options] [value]"
+    msg "options:"
+    msg "-s | --suite : To set suite name"
+    msg "-v | --vareint: To set varient name [ default = raw ]"
+    msg "-a | --arch: To set arch [ default = all ]"
+    msg "-l | --list: To show all suites and varients"
+    msg "examples:"
+    msg "[To build impish suite raw varient] => bash ${0} -s impish -v raw"
+    msg "[To build a specific arch type] => bash ${0} -s impish -v raw -a arm64"
+    msg
+    msg "This tool is specially built to automate tarball building with GitHub action or any workflows."
+    msg "(C) RandomCoderOrg"
+}
+
 
 while (($# > 0)); do
     case $1 in
