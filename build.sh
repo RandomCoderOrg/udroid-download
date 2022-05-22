@@ -52,6 +52,10 @@ function build() {
     fi
 
     # Execute script
+    shout "Triggering build:"
+    msg "SUITE=$SUITE"
+    msg "Varient=$VARIENT"
+    msg "ARCH=$ARCH"
     cd fs-cook || die "failed to cd ./fs-cook" # script need to executed from fs-cook root directory
     bash ../suites/"$SUITE"/"$VARIENT".sh "$ARCH"
 }
