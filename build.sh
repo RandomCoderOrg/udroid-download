@@ -53,7 +53,7 @@ function build() {
 
     # Execute script
     cd fs-cook || die "failed to cd ./fs-cook" # script need to executed from fs-cook root directory
-    bash ../suites/"$SUITE"/"$VARIENT" "$ARCH"
+    bash ../suites/"$SUITE"/"$VARIENT".sh "$ARCH"
 }
 
 function _list() {
