@@ -30,6 +30,10 @@ shout()  { echo -e "[-] ${*}";:;}
 lshout() { echo -e "-> ${*}";:;}
 msg()    { echo -e "${*} \e[0m" >&2;:;}
 
+# DEFAULTS
+ARCH="all"
+VARIENT="raw"
+
 function build() {
     # load suites
     _avalible_suites="$(find ./suites -type d | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' ')"
