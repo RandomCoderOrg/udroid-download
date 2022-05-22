@@ -19,7 +19,7 @@ ENABLE_USER_SETUP=false
 
 additional_setup() {
 
-# update sources.list
+# update sources.list [Only for ubuntu suites]
 cat <<-EOF >$chroot_dir/etc/apt/sources.list
 # See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
 # newer versions of the distribution.
