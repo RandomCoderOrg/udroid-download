@@ -50,7 +50,7 @@ jobs:
         release_name: ${{ env.VERSIONTAG }}
       body_path: release.md
       draft: false
-        prerelease: false
+      prerelease: false
     - name: Upload assets
       run: |
         set -x
