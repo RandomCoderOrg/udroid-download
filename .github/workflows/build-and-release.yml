@@ -41,16 +41,16 @@ jobs:
     - name: Generate release notes
       run: sudo bash .github/scripts/generate-release-notes.sh
     - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.VERSIONTAG }}
-          release_name: ${{ env.VERSIONTAG }}
-        body_path: release.md
-        draft: false
-          prerelease: false
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.VERSIONTAG }}
+        release_name: ${{ env.VERSIONTAG }}
+      body_path: release.md
+      draft: false
+        prerelease: false
     - name: Upload assets
       run: |
         set -x
