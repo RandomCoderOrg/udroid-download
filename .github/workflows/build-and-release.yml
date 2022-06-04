@@ -15,6 +15,10 @@ jobs:
       - name: Setup Dependencies
         run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
       
+      - name: checkout submoudles
+        run: |
+          git submodule init
+          git submodule update
       - name: Build tarballs
         run: |
           sudo bash build.sh -s impish -v raw -a all
