@@ -1,0 +1,64 @@
+name: Build and Release
+on:
+  push:
+    branches:
+      - master
+      - anchor
+
+jobs:
+  BuildRaw:
+    runs-on: ubuntu-latest
+    setps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Setup Dependencies
+        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
+      
+      - name: Build tarballs
+        run: |
+          sudo bash build.sh -s impish -v raw -a all
+          sudo bash build.sh -s jammy -v raw -a all
+          sudo bash build.sh -s kinetic -v raw -a all
+      
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: raw-tarballs
+          path: fs-cook/out/*.tar.gz
+    
+  Create-Release:
+    runs-on: ubuntu-latest
+    requires:
+      - BuildRaw
+    setps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v3
+      with:
+        name: raw-tarballs
+    - name: Compute release tag
+      run: sudo bash .github/scripts/compute-release-tag.sh
+    - name: Generate release notes
+      run: sudo bash .github/scripts/generate-release-notes.sh
+    - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSIONTAG }}
+          release_name: ${{ env.VERSIONTAG }}
+        body_path: release.md
+        draft: false
+          prerelease: false
+    - name: Upload assets
+      run: |
+        set -x
+        assets=()
+        for asset in ./*.tar.gz; do
+          assets+=("-a" "$asset")
+        done
+        tag_name="${VERSIONTAG}"
+        hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
