@@ -48,9 +48,9 @@ jobs:
       with:
         tag_name: ${{ env.VERSIONTAG }}
         release_name: ${{ env.VERSIONTAG }}
-      body_path: release.md
-      draft: false
-      prerelease: false
+        body_path: release.md
+        draft: false
+        prerelease: false
     - name: Upload assets
       run: |
         set -x
