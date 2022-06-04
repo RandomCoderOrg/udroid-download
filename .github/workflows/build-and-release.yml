@@ -8,7 +8,7 @@ on:
 jobs:
   BuildRaw:
     runs-on: ubuntu-latest
-    setps:
+    steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-qemu-action@v1.2.0
 
@@ -29,9 +29,9 @@ jobs:
     
   Create-Release:
     runs-on: ubuntu-latest
-    requires:
+    needs:
       - BuildRaw
-    setps:
+    steps:
     - uses: actions/checkout@v2
     - uses: actions/download-artifact@v3
       with:
