@@ -5,7 +5,7 @@ BUILD_TYPE="AB"
 # udroid-on-android latest tag
 udroid_version=$(
      git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-     https://github.com/RandomCoderOrg/udroid-on-android \
+     https://github.com/RandomCoderOrg/ubuntu-on-android \
      | tail -n1 | cut -d / -f 3 | cut -d v -f 2-
 )
 
