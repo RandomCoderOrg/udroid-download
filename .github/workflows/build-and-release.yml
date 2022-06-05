@@ -70,6 +70,6 @@ jobs:
           assets+=("-a" "$asset")
         done
         tag_name="${VERSIONTAG}"
-        hub release create "${assets[@]}" -m "$tag_name"
+        hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
