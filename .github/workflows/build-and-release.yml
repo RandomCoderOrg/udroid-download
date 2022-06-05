@@ -21,7 +21,9 @@ jobs:
           git submodule update
       - name: Build tarballs
         run: |
-          sudo bash build.sh -s kinetic -v raw -a amd64
+          sudo bash build.sh -s impish -v raw -a all
+          sudo bash build.sh -s jammy -v raw -a all
+          sudo bash build.sh -s kinetic -v raw -a all
       
       - name: upload artifacts
         uses: actions/upload-artifact@v3
