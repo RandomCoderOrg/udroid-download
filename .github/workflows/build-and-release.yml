@@ -39,7 +39,16 @@ jobs:
       with:
         name: raw-tarballs
     - name: Compute release tag
-      run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/compute-release-tag.sh
+      run: |
+        udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+        https://github.com/RandomCoderOrg/ubuntu-on-android \
+        | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
+        udroid_download=$(
+        git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+         https://github.com/RandomCoderOrg/udroid-download \
+          | tail -n1 | cut -d / -f 3
+        )
+        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> $GITHUB_ENV
     - name: Generate release notes
       run: sudo bash /home/runner/work/udroid-download/.github/scripts/generate-release-notes.sh
     - name: Create Release
