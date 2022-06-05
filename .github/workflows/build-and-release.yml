@@ -39,9 +39,9 @@ jobs:
       with:
         name: raw-tarballs
     - name: Compute release tag
-      run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/compute-release-tag.sh
+      run: sudo bash /home/runner/work/udroid-download/.github/scripts/compute-release-tag.sh
     - name: Generate release notes
-      run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
+      run: sudo bash /home/runner/work/udroid-download/.github/scripts/generate-release-notes.sh
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
