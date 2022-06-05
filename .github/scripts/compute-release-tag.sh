@@ -17,4 +17,4 @@ udroid_download=$(
 )
 
 # export version to github environment
-echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> $GITHUB_ENV
+echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> "$GITHUB_ENV"
