@@ -19,4 +19,4 @@ udroid_download=$(
 version="V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))"
 
 # export version to github environment
-echo "VERSIONTAG=$version" >> $GITHUB_ENV
+echo "export VERSIONTAG=$version" >> $GITHUB_ENV
