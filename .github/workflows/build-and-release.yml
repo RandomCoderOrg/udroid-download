@@ -21,6 +21,8 @@ jobs:
           git submodule update
       - name: Build tarballs
         run: |
+          sudo bash build.sh -s impish -v raw -a all
+          sudo bash build.sh -s jammy -v raw -a all
           sudo bash build.sh -s kinetic -v raw -a all
       
       - name: upload artifacts
@@ -39,9 +41,18 @@ jobs:
       with:
         name: raw-tarballs
     - name: Compute release tag
-      run: sudo bash .github/scripts/compute-release-tag.sh
+      run: |
+        udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+        https://github.com/RandomCoderOrg/ubuntu-on-android \
+        | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
+        udroid_download=$(
+        git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+         https://github.com/RandomCoderOrg/udroid-download \
+          | tail -n1 | cut -d / -f 3
+        )
+        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> $GITHUB_ENV
     - name: Generate release notes
-      run: sudo bash .github/scripts/generate-release-notes.sh
+      run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -61,6 +72,6 @@ jobs:
           assets+=("-a" "$asset")
         done
         tag_name="${VERSIONTAG}"
-        hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
+        hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
