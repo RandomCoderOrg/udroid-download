@@ -65,6 +65,8 @@ jobs:
         body_path: release.md
         draft: false
         prerelease: false
+    - name: Sleep for sometime
+      run: sleep 60
     - name: Upload assets
       run: |
         set -x
