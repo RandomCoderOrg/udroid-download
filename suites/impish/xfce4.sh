@@ -54,14 +54,10 @@ deb $MIRROR $SUITE-backports main restricted universe multiverse
 # deb-src $MIRROR $SUITE-backports main restricted universe multiverse
 EOF
 
-apt install --no-install-recommends -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common \
-    xubuntu-desktop \
-    git
+# use fs-cook run_cmd to add extra --no-install-recommends option
+run_cmd "apt-get update"
+run_cmd "apt-get install --no-install-recommends -y apt-transport-https tigervnc-common tigervnc-xorg-extension tigervnc-standalone-server ca-certificates curl gnupg-agent software-properties-common xubuntu-desktop git"
+run_cmd "apt-get clean"
 
 # clone & install udroid-tools
 git clone https://github.com/RandomCoderOrg/udroid-extra-tool-proot
