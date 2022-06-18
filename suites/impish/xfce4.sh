@@ -60,17 +60,13 @@ run_cmd "apt-get install --no-install-recommends -y apt-transport-https tigervnc
 run_cmd "apt-get clean"
 
 # clone & install udroid-tools
-git clone https://github.com/RandomCoderOrg/udroid-extra-tool-proot
-cd udroid-extra-tool-proot || exit 2
-./install.sh
+run_cmd "git clone https://github.com/RandomCoderOrg/udroid-extra-tool-proot; cd udroid-extra-tool-proot; ./install.sh"
 
 # create user
-udroid-adduser -u udroid -p secret
+run_cmd "udroid-adduser -u udroid -p secret"
 
 # try to install themes
-git clone https://github.com/RandomCoderOrg/udroid-xfce4-conf
-cd udroid-xfce4-conf || exit 2
-bash install.sh
+run_cmd "git clone https://github.com/RandomCoderOrg/udroid-xfce4-conf; cd udroid-xfce4-conf ;bash install.sh"
 
 }
 
