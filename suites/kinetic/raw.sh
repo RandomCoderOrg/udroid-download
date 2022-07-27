@@ -10,14 +10,12 @@ export OVERRIDER_COMPRESSION_TYPE
 export SUITE
 export ENABLE_EXIT
 export ENABLE_USER_SETUP
-export COMPONENTS
 
 SUITE="kinetic"
 frn="out/$SUITE-raw"
 OVERRIDER_COMPRESSION_TYPE="gzip"
 ENABLE_EXIT=true
 ENABLE_USER_SETUP=false
-COMPONENTS="multiverse,universe,main,restricted"
 
 
 additional_setup() {
@@ -63,9 +61,9 @@ EOF
 # arch name as $1
 
 case $1 in
-arm64 | armhf | amd64 | i386 ) _arch="$1" ;;
-all | -a) _arch="armhf arm64 amd64 i386" ;;
-*) die "Unknown arch option [ Allowed: arm64, armhf, amd64, i386, all(for all 4) ]" ;;
+arm64 | armhf | amd64) _arch="$1" ;;
+all | -a) _arch="armhf arm64 amd64" ;;
+*) die "Unknown arch option [ Allowed: arm64, armhf, amd64, all(for all 3) ]" ;;
 esac
 
 for arch in ${_arch}; do
