@@ -10,12 +10,15 @@ export OVERRIDER_COMPRESSION_TYPE
 export SUITE
 export ENABLE_EXIT
 export ENABLE_USER_SETUP
+export COMPONENTS
 
 SUITE="kinetic"
 frn="out/$SUITE-raw"
 OVERRIDER_COMPRESSION_TYPE="gzip"
 ENABLE_EXIT=true
 ENABLE_USER_SETUP=false
+COMPONENTS="multiverse,universe,main,restricted"
+
 
 additional_setup() {
 
