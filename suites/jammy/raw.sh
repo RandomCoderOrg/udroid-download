@@ -56,6 +56,8 @@ deb $MIRROR $SUITE-backports main restricted universe multiverse
 # deb-src $MIRROR $SUITE-backports main restricted universe multiverse
 EOF
 
+install_pkg "pv"
+
 }
 
 # Option to build specific arch
