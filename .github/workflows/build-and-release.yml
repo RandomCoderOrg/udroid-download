@@ -50,7 +50,7 @@ jobs:
          https://github.com/RandomCoderOrg/udroid-download \
           | tail -n1 | cut -d / -f 3
         )
-        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> $GITHUB_ENV
+        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
     - name: Generate release notes
       run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
     - name: Create Release
