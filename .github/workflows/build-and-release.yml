@@ -77,3 +77,15 @@ jobs:
         hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: update json
+      run: |
+        sudo apt-get install python3 -y
+        sudo python3 gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
+        set +e
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git add --all
+        git commit -m "AUTO: update distro-data.json"
+        git push
+        set -e
