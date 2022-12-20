@@ -1,6 +1,7 @@
 import os
 import json
 import optparse
+import utils
 
 GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
 DIR             = "."
@@ -23,7 +24,6 @@ def update_json_conf(file) -> None:
     file = open(JSON_CONF, 'w')
     json.dump(jdata, file, indent=4)
     
-
 def strip_info(file):
     basename = os.path.basename(file)
     name = os.path.splitext(basename)[0]
