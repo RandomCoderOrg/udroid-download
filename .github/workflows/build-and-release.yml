@@ -81,7 +81,7 @@ jobs:
     - name: update json
       run: |
         sudo apt-get install python3 -y
-        sudo python3 gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
+        sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
         set +e
         git config user.name github-actions[bot]
         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
