@@ -56,6 +56,19 @@
             "armhfurl": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v02-xfce4/hippo-armhf-v02-xfce4.tar.gz",
             "armhfsha": "e797c8590644ffd968dc1727474b533f7bc32e22f69a5f91e519614315baf211"
         }
+    },
+    "kinetic": {
+        "varients": ["raw"],
+        "raw": {
+            "arch": ["aarch64", "armv7l", "armv8l", "armhf"],
+            "Name": "udroid-kinetic-raw",
+            "FirendlyName": "Ubuntu Kinetic (raw)",
+            "aarch64url": "",
+            "aarch64sha": "",
+            "armhfurl": "",
+            "armhfsha": "",
+            "x86_64url": "",
+            "x86_64sha": ""
+        }
     }
-
 }
