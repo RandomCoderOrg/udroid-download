@@ -4,7 +4,7 @@ import optparse
 import utils
 
 GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
-DIR             = "."
+DIR             = "fs-cook/out"
 VERBOSE         = False
 JSON_CONF       = f"{GIT_ROOT}/distro-data.json"
 
