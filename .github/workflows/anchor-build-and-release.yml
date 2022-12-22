@@ -21,8 +21,7 @@ jobs:
           git submodule update
       - name: Build tarballs
         run: |
-          sudo bash build.sh -s jammy -v raw -a all
-          sudo bash build.sh -s kinetic -v raw -a all
+          sudo bash build.sh -s jammy -v raw -a arm64
       
       - name: upload artifacts
         uses: actions/upload-artifact@v3
@@ -49,7 +48,7 @@ jobs:
          https://github.com/RandomCoderOrg/udroid-download \
           | tail -n1 | cut -d / -f 3
         )
-        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
+        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}PR$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
     - name: Generate release notes
       run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
     - name: Create Release
@@ -62,7 +61,7 @@ jobs:
         release_name: ${{ env.VERSIONTAG }}
         body_path: release.md
         draft: false
-        prerelease: false
+        prerelease: true
     - name: Sleep for sometime
       run: sleep 60
     - name: Upload assets
