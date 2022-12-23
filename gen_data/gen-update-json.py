@@ -13,7 +13,7 @@ def update_json_conf(file) -> None:
     jdata = json.load(open(JSON_CONF, 'r'))
     
     # update url
-    jdata[data[0]][data[1]][f"{data[2]}Url"] = get_release_url(
+    jdata[data[0]][data[1]][f"{data[2]}url"] = get_release_url(
                                                 RELEASE_TAG, data[3])
     
     # update sha
