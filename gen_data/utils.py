@@ -1,31 +1,13 @@
 import json
 
-def resolv_data(file,
-                    suite:      str,
-                    varients:   list,
-                    Name:       str,
-                    FriendlyName: str,
-                    arch: list = ["aarch64", "armv7l", "armhf", "amd64", "x86_64"]
-                    ):
-    file = json.load(open(file, 'r'))
-    
-    # update suites list
-    file["suites"].append(suite)
-    
-    # [WIP] create new suite
-    new_suite = {
-        f"{suite}" : {
-            "variants" : varients,
-        }
-    }
-    
-    # register varients
-    for variant in varients:
-        new_suite[f"{suite}"][f"{variant}"] = {
-            "arch" : arch,
-        }
-        
-    # exp1
-    # create new data(">/file", "sai", ["raw"], )
-    
-    
+def resolv_data(
+       json_data: dict,
+       suite: str,
+       variant: str,
+       arch: list = ...,
+       Name: str = ...,
+       FriendlyName: str = ...,
+    ) -> dict:
+    # TODO yet to be implemented
+    pass
+
