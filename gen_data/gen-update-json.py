@@ -2,6 +2,7 @@ import os
 import json
 import optparse
 import utils
+import arch
 
 GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
 DIR             = "fs-cook/out"
@@ -29,21 +30,14 @@ def strip_info(file):
     name = os.path.splitext(basename)[0]
     name = os.path.splitext(name)[0]
     
-    sp = name.split("-")
-    ar = {
-        "armhf":    "armhf",
-        "arm":      "armhf",
-        "arm64":    "aarch64",
-        "aarch64":  "aarch64",
-        "amd64":    "amd64",
-        "x86_64":   "amd64"
-    }
+    sp       = name.split("-")
+    StoPdict = arch.translate()
 
     suite   = sp[0]
     variant = sp[1]
-    arch    = ar[sp[2]]
-        
-    return [suite, variant, arch, basename]
+    packageArchitecture  = StoPdict[sp[2]]
+    
+    return [suite, variant, packageArchitecture, basename]
 
 def get_release_url(release_tag, file) -> str:
     repo="https://github.com/RandomCoderOrg/udroid-download"
