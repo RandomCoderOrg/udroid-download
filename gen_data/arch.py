@@ -24,12 +24,11 @@ def translated_arch() -> dict:
 def ReverseTranslate() -> dict:
     StoPdict = translated_arch();
     PtoSdict = {}
-    
+
     for SysArch,PakArch in zip(StoPdict.keys(),StoPdict.values()):
-        if PakArch in PtoSdict:
-            PtoSdict[PakArch] = [PtoSdict[PakArch]]
+        if PakArch in PtoSdict: 
             PtoSdict[PakArch].append(SysArch)
         else:
-            PtoSdict[PakArch] = SysArch
-
+            PtoSdict[PakArch] = [SysArch]
+            
     return PtoSdict
