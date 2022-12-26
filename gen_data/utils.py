@@ -1,6 +1,4 @@
-import json
-import arch as archAlt
-archAltName = archAlt.ReverseTranslate()
+import os
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
@@ -37,6 +35,9 @@ def add_arch(JsonFile: dict, suite: str, varient: str, arch:list[str]) -> None:
         arch (list[str]): The arch to add
     """
     
+    import arch as archAlt
+    archAltName = archAlt.ReverseTranslate()
+    
     #revArchLst = {'armhf': ['armhf', 'arm'], 'aarch64': ['arm64', 'aarch64'], 'amd64': ['amd64', 'x86_64']}
     revArchLst = archAltName[arch]
     for revArch in revArchLst:
@@ -53,6 +54,13 @@ def resolv_data(
        Name: str = ...,
        FriendlyName: str = ...,
     ) -> dict:
+    
+    if Name is ...:
+        Name = f"{suite}-{variant}"
+    
+    if FriendlyName is ...:
+        FriendlyName = f"{suite} {variant}"
+        
     if suite not in json_data["suites"]:
         add_suite(json_data,suite)
     
@@ -60,7 +68,17 @@ def resolv_data(
         add_varient(json_data, suite, variant, Name, FriendlyName)
     
     for arc in arch:
-        if arch not in json_data[suite][variant]["arch"]:
+        if arc not in json_data[suite][variant]["arch"]:
             add_arch(json_data, suite, variant, arc)
     
     return json_data
+
+def getfilesR(path: str) -> list:
+   
+    files = []
+    # include depth
+    for r, d, f in os.walk(path):
+        for file in f:
+            files.append(os.path.join(r, file))
+    
+    return files
