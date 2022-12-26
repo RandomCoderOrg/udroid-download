@@ -56,6 +56,13 @@ def resolv_data(
        Name: str = ...,
        FriendlyName: str = ...,
     ) -> dict:
+    
+    if Name is ...:
+        Name = f"{suite}-{variant}"
+    
+    if FriendlyName is ...:
+        FriendlyName = f"{suite} {variant}"
+        
     if suite not in json_data["suites"]:
         add_suite(json_data,suite)
     
