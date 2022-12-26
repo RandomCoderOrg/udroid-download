@@ -5,7 +5,7 @@ import utils
 import arch
 
 GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
-DIR             = "fs-cook/out"
+DIR             = "."
 VERBOSE         = False
 JSON_CONF       = f"{GIT_ROOT}/distro-data.json"
 

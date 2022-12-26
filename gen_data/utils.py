@@ -68,7 +68,7 @@ def resolv_data(
         add_varient(json_data, suite, variant, Name, FriendlyName)
     
     for arc in arch:
-        if arch not in json_data[suite][variant]["arch"]:
+        if arc not in json_data[suite][variant]["arch"]:
             add_arch(json_data, suite, variant, arc)
     
     return json_data
