@@ -1,6 +1,4 @@
-import json
-import arch as archAlt
-archAltName = archAlt.ReverseTranslate()
+import os
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
