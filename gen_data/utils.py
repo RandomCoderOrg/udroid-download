@@ -74,3 +74,13 @@ def resolv_data(
             add_arch(json_data, suite, variant, arc)
     
     return json_data
+
+def getfilesR(path: str) -> list:
+   
+    files = []
+    # include depth
+    for r, d, f in os.walk(path):
+        for file in f:
+            files.append(os.path.join(r, file))
+    
+    return files
