@@ -37,6 +37,9 @@ def add_arch(JsonFile: dict, suite: str, varient: str, arch:list[str]) -> None:
         arch (list[str]): The arch to add
     """
     
+    import arch as archAlt
+    archAltName = archAlt.ReverseTranslate()
+    
     #revArchLst = {'armhf': ['armhf', 'arm'], 'aarch64': ['arm64', 'aarch64'], 'amd64': ['amd64', 'x86_64']}
     revArchLst = archAltName[arch]
     for revArch in revArchLst:
