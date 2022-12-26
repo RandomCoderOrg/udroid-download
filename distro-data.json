@@ -1,24 +1,45 @@
 {
-    "suites": ["jammy", "impish", "focal"],
+    "suites": [
+        "jammy",
+        "impish",
+        "focal"
+    ],
     "jammy": {
-        "varients": ["raw"],
+        "varients": [
+            "raw"
+        ],
         "raw": {
-            "arch": ["aarch64", "armv7l", "armhf", "amd64", "x86_64"],
+            "arch": [
+                "aarch64",
+                "armv7l",
+                "armhf",
+                "amd64",
+                "x86_64"
+            ],
             "Name": "udroid-jammy-raw",
             "FirendlyName": "Ubuntu Jammy (raw)",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R3/jammy-raw-arm64.tar.gz",
-            "aarch64sha": "5e041e094eaf175a8a76ebf30f911aad043da53c9e54012eb8c4a69e27550518",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3PR19/jammy-raw-arm64.tar.gz",
+            "aarch64sha": "2374543a8344241a3d9093041c3ad2dae50e535cf22e8c7d37fc884d70fb8068",
             "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R3/jammy-raw-armhf.tar.gz",
             "armhfsha": "df811e5010cbb07e05db78aa1dc1deecd3139deae8704be31a4db7d23d3efccf",
             "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R3/jammy-raw-amd64.tar.gz",
             "amd64sha": "2102530b19b69b0c70c26e09915c58b58486e5df53c4c8706084b11744d010d1"
         }
     },
-
     "impish": {
-        "varients": ["xfce4", "mate", "raw"],
+        "varients": [
+            "xfce4",
+            "mate",
+            "raw"
+        ],
         "raw": {
-            "arch": ["aarch64", "armv7l", "armhf", "amd64", "x86_64"],
+            "arch": [
+                "aarch64",
+                "armv7l",
+                "armhf",
+                "amd64",
+                "x86_64"
+            ],
             "Name": "udroid-impish-raw",
             "FirendlyName": "Ubuntu Impish (raw)",
             "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R3/impish-raw-arm64.tar.gz",
@@ -29,7 +50,11 @@
             "amd64sha": "c5ce02ed7be92537bb1e2bcc5eb2ab588afc50c147972e1336a2a9c290813245"
         },
         "xfce4": {
-            "arch": ["aarch64", "amd64", "x86_64"],
+            "arch": [
+                "aarch64",
+                "amd64",
+                "x86_64"
+            ],
             "Name": "udroid-impish-xfce4",
             "FirendlyName": "Ubuntu Impish (xfce4)",
             "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-arm64-xfce4-V3MBB2.tar.gz",
@@ -38,7 +63,9 @@
             "amd64sha": "88a5f5f079aef994b6d5b2e3df773aa875ed2157d1f00c8fda504bda9f01e680"
         },
         "mate": {
-            "arch": ["aarch64"],
+            "arch": [
+                "aarch64"
+            ],
             "Name": "udroid-impish-mate",
             "FirendlyName": "Ubuntu Impish (mate)",
             "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-mate-arm64-betav2.tar.gz",
@@ -46,9 +73,16 @@
         }
     },
     "focal": {
-        "varients": ["xfce4"],
-        "xfce4":{
-            "arch": ["aarch64", "armv7l", "armv8l", "armhf"],
+        "varients": [
+            "xfce4"
+        ],
+        "xfce4": {
+            "arch": [
+                "aarch64",
+                "armv7l",
+                "armv8l",
+                "armhf"
+            ],
             "Name": "udroid-focal-xfce4",
             "FirendlyName": "Ubuntu Focal (xfce4)",
             "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v02-xfce4/hippo-arm64-v02-xfce4.tar.gz",
@@ -58,9 +92,16 @@
         }
     },
     "kinetic": {
-        "varients": ["raw"],
+        "varients": [
+            "raw"
+        ],
         "raw": {
-            "arch": ["aarch64", "armv7l", "armv8l", "armhf"],
+            "arch": [
+                "aarch64",
+                "armv7l",
+                "armv8l",
+                "armhf"
+            ],
             "Name": "udroid-kinetic-raw",
             "FirendlyName": "Ubuntu Kinetic (raw)",
             "aarch64url": "",
