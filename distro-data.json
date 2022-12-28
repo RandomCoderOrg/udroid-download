@@ -2,7 +2,8 @@
     "suites": [
         "jammy",
         "impish",
-        "focal"
+        "focal",
+        "lunar"
     ],
     "jammy": {
         "varients": [
@@ -19,7 +20,7 @@
             "Name": "udroid-jammy-raw",
             "FirendlyName": "Ubuntu Jammy (raw)",
             "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3PR19/jammy-raw-arm64.tar.gz",
-            "aarch64sha": "2374543a8344241a3d9093041c3ad2dae50e535cf22e8c7d37fc884d70fb8068",
+            "aarch64sha": "e2a42eaf7af74b8ba019001b9628578ee9ac503668691ef9c28434b1044ba87d",
             "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R3/jammy-raw-armhf.tar.gz",
             "armhfsha": "df811e5010cbb07e05db78aa1dc1deecd3139deae8704be31a4db7d23d3efccf",
             "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R3/jammy-raw-amd64.tar.gz",
@@ -110,6 +111,21 @@
             "armhfsha": "",
             "x86_64url": "",
             "x86_64sha": ""
+        }
+    },
+    "lunar": {
+        "varients": [
+            "raw"
+        ],
+        "raw": {
+            "arch": [
+                "arm64",
+                "aarch64"
+            ],
+            "Name": "lunar-raw",
+            "FirendlyName": "lunar raw",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3PR19/lunar-raw-arm64.tar.gz",
+            "aarch64sha": "d4332a358308e180949d9c25a29e78204440d4d0c9c3bff6eed4bcd93d1dca34"
         }
     }
 }
