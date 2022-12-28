@@ -2,9 +2,10 @@ import os
 import json
 import optparse
 import utils
+import arch
 
 GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
-DIR             = "fs-cook/out"
+DIR             = "."
 VERBOSE         = False
 JSON_CONF       = f"{GIT_ROOT}/distro-data.json"
 
@@ -12,13 +13,18 @@ def update_json_conf(file) -> None:
     data = strip_info(file)
     jdata = json.load(open(JSON_CONF, 'r'))
     
+    # resolv data
+    jdata = utils.resolv_data(jdata, data[0], data[1], [data[2]])
+    
     # update url
-    jdata[data[0]][data[1]][f"{data[2]}Url"] = get_release_url(
-                                                RELEASE_TAG, data[3])
+    jdata[data[0]]  \
+         [data[1]]  \
+         [f"{data[2]}url"] = get_release_url(RELEASE_TAG, data[3])
     
     # update sha
-    jdata[data[0]][data[1]][f"{data[2]}sha"] = os.popen(
-        f"sha256sum {DIR}/{data[3]}").read().split()[0]
+    jdata[data[0]] \
+         [data[1]] \
+         [f"{data[2]}sha"] = os.popen(f"sha256sum {file}").read().split()[0]
     
     # update JSON_CONF
     file = open(JSON_CONF, 'w')
@@ -29,25 +35,18 @@ def strip_info(file):
     name = os.path.splitext(basename)[0]
     name = os.path.splitext(name)[0]
     
-    sp = name.split("-")
-    ar = {
-        "armhf":    "armhf",
-        "arm":      "armhf",
-        "arm64":    "aarch64",
-        "aarch64":  "aarch64",
-        "amd64":    "amd64",
-        "x86_64":   "amd64"
-    }
+    sp       = name.split("-")
+    StoPdict = arch.translated_arch()
 
     suite   = sp[0]
     variant = sp[1]
-    arch    = ar[sp[2]]
-        
-    return [suite, variant, arch, basename]
+    packageArchitecture  = StoPdict[sp[2]]
+    
+    return [suite, variant, packageArchitecture, basename]
 
 def get_release_url(release_tag, file) -> str:
-    repo="https://github.com/RandomCoderOrg/udroid-download"
-    url="{}/releases/download/{}/{}".format(repo, release_tag, file)
+    repo ="https://github.com/RandomCoderOrg/udroid-download"
+    url  ="{}/releases/download/{}/{}".format(repo, release_tag, file)
     return url
     
 if __name__ == '__main__':
@@ -60,8 +59,10 @@ if __name__ == '__main__':
     options, args = parser.parse_args()
     # get release tag
     
+    from utils import getfilesR
+    
     RELEASE_TAG = options.release_tag
-    for file in os.listdir(DIR):
+    for file in getfilesR(DIR):
             if file.endswith(".tar.gz"):
                 update_json_conf(file)
                 
