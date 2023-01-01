@@ -1,6 +1,5 @@
 name: Build and Release
 on:
-  schedule: [{cron: "1 1 1 * *"}]
   push:
     branches:
       - anchor
