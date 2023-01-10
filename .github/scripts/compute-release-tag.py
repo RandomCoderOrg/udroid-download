@@ -12,10 +12,9 @@ API_ENDPOINT_UOA="https://api.github.com/repos/RandomCoderOrg/ubuntu-on-android/
 resp_uoa = requests.get(API_ENDPOINT_UOA, headers=headers)
 Json_data2 = json.loads(resp_uoa.text)
 
-udroid_version = Json_data2[0]['tag_name']
-udroid_version = udroid_version.replace("v","")
-workType = Json_data2[0]['target_commitish']
-
+uV = Json_data2[0]['tag_name']
+# uV = ["v3.1-alpha"][0]   # For testing
+udroid_version = uV.replace("v","")
 
 
 API_ENDPOINT_UA="https://api.github.com/repos/RandomCoderOrg/udroid-download/releases"
@@ -30,9 +29,9 @@ IterationNumber = int(IterationNumber) + 1
 
 BUILD_TYPE="AB"
 
-Latest_release_tag = "V-%s-%s-%s%s%s" % (udroid_version,workType,BUILD_TYPE,RELEASE_TYPE,IterationNumber)
+Latest_release_tag = "V-%s-%s%s%s" % (udroid_version,BUILD_TYPE,RELEASE_TYPE,IterationNumber)
 
 with open(GITHUB_ENV_PATH, "a+") as f:
   f.write(Latest_release_tag)
 
-# print(Latest_release_tag)
+print(Latest_release_tag)
