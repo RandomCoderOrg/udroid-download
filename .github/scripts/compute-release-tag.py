@@ -9,17 +9,17 @@ headers = {
 
 API_ENDPOINT_UOA="https://api.github.com/repos/RandomCoderOrg/ubuntu-on-android/releases"
 resp_uoa = requests.get(API_ENDPOINT_UOA, headers=headers)
-Json_data2 = json.loads(resp_uoa.text)
+Json_data_uoa = json.loads(resp_uoa.text)
 
 # uV = ["v3.1-alpha"][0]   # For testing
-udroid_version = Json_data2[0]['tag_name'].replace("v","")
+udroid_version = Json_data_uoa[0]['tag_name'].replace("v","")
 
 API_ENDPOINT_UA="https://api.github.com/repos/RandomCoderOrg/udroid-download/releases"
 resp_ud = requests.get(API_ENDPOINT_UA, headers=headers)
-Json_data = json.loads(resp_ud.text)
+Json_data_ua = json.loads(resp_ud.text)
 
 
-match = re.compile(r'V(\d+)(\D+)(\d+)').findall(Json_data[0]['tag_name'])
+match = re.compile(r'V(\d+)(\D+)(\d+)').findall(Json_data_ua[0]['tag_name'])
 _, RELEASE_TYPE, IterationNumber = match[0]
 IterationNumber = int(IterationNumber) + 1
 
