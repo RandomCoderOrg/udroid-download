@@ -25,7 +25,7 @@ IterationNumber = int(IterationNumber) + 1
 
 BUILD_TYPE="AB"
 
-Latest_release_tag = "V-%s-%s%s%s" % (udroid_version,BUILD_TYPE,RELEASE_TYPE,IterationNumber)
+Latest_release_tag = "VERSIONTAG=V-%s-%s%s%s" % (udroid_version,BUILD_TYPE,RELEASE_TYPE,IterationNumber)
 
 with open(GITHUB_ENV_PATH, "a+") as f:
   f.write(Latest_release_tag)
