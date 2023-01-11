@@ -42,7 +42,7 @@ jobs:
     - name: Compute release tag
       run: |
         pip3 install requests
-        sudo python3 /home/runner/work/udroid-download/udroid-download/.github/scripts/compute-release-tag.py
+        python3 /home/runner/work/udroid-download/udroid-download/.github/scripts/compute-release-tag.py
 
     - name: Generate release notes
       run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
