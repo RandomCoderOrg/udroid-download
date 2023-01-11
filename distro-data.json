@@ -26,6 +26,19 @@
             "armhfsha": "fbc92e65a712701ff650f4538cbe044a8a9829a3ce62e4af20e05bfb30975411",
             "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R21/jammy-raw-amd64.tar.gz",
             "amd64sha": "f3fe93f24bfb99edc02ace0eb9a03975dc07967e7e4b5adb7d3b39ddc7bd0fb0"
+        },
+        "xfce4": {
+            "arch": [
+                "aarch64",
+                "amd64",
+                "x86_64"
+            ],
+            "Name": "udroid-impish-xfce4",
+            "FirendlyName": "Ubuntu Impish (xfce4)",
+            "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-arm64.tar.gz",
+            "aarch64sha": "52aa053abde4c072ee82cbff2a7edb6ebd07fbb9788d526c8dad57cfa903be27",
+            "amd64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-amd64.tar.gz",
+            "amd64sha": "4d3585789c6932d08b887dddbd54d063bc220933e2d6a150e63c56245a9a2aef"
         }
     },
     "impish": {
@@ -59,10 +72,10 @@
             ],
             "Name": "udroid-impish-xfce4",
             "FirendlyName": "Ubuntu Impish (xfce4)",
-            "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-arm64-xfce4-V3MBB2.tar.gz",
-            "aarch64sha": "617dc4b18bd27b181ebabeadf8964f23b6e8087da75c253ead88dba1e7931f1d",
-            "amd64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impish-v3-build01.tar.gz",
-            "amd64sha": "88a5f5f079aef994b6d5b2e3df773aa875ed2157d1f00c8fda504bda9f01e680"
+            "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-arm64.tar.gz",
+            "aarch64sha": "52aa053abde4c072ee82cbff2a7edb6ebd07fbb9788d526c8dad57cfa903be27",
+            "amd64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-amd64.tar.gz",
+            "amd64sha": "4d3585789c6932d08b887dddbd54d063bc220933e2d6a150e63c56245a9a2aef"
         },
         "mate": {
             "arch": [
