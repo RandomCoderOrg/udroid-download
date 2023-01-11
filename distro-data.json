@@ -8,7 +8,8 @@
     ],
     "jammy": {
         "varients": [
-            "raw"
+            "raw",
+            "xfce4"
         ],
         "raw": {
             "arch": [
