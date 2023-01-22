@@ -9,7 +9,8 @@
     "jammy": {
         "varients": [
             "raw",
-            "xfce4"
+            "xfce4",
+            "gnome-unstable"
         ],
         "raw": {
             "arch": [
@@ -34,12 +35,21 @@
                 "amd64",
                 "x86_64"
             ],
-            "Name": "udroid-impish-xfce4",
-            "FirendlyName": "Ubuntu Impish (xfce4)",
+            "Name": "udroid-jammy-xfce4",
+            "FirendlyName": "Ubuntu jammy (xfce4)",
             "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-arm64.tar.gz",
             "aarch64sha": "52aa053abde4c072ee82cbff2a7edb6ebd07fbb9788d526c8dad57cfa903be27",
             "amd64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-amd64.tar.gz",
             "amd64sha": "4d3585789c6932d08b887dddbd54d063bc220933e2d6a150e63c56245a9a2aef"
+        },
+        "gnome-unstable": {
+            "arch": [
+                "aarch64"
+            ],
+            "Name": "udroid-impish-gnome-unstable",
+            "FirendlyName": "Ubuntu Jammy GNOME",
+            "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/jammy-gnome-arm64.tar.gz",
+            "aarch64sha": "bf8034f6b5ec3c11ecf88c78e58573409098861eee18017cd7a963ff9c30282e"
         }
     },
     "impish": {
