@@ -46,7 +46,7 @@
             "arch": [
                 "aarch64"
             ],
-            "Name": "udroid-impish-gnome",
+            "Name": "udroid-jammy-gnome",
             "FirendlyName": "Ubuntu Jammy GNOME (unstable)",
             "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/jammy-gnome-arm64.tar.gz",
             "aarch64sha": "bf8034f6b5ec3c11ecf88c78e58573409098861eee18017cd7a963ff9c30282e"
