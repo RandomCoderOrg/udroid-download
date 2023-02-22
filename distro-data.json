@@ -36,8 +36,8 @@
             ],
             "Name": "udroid-jammy-xfce4",
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (xfce4)",
-            "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-arm64.tar.gz",
-            "aarch64sha": "52aa053abde4c072ee82cbff2a7edb6ebd07fbb9788d526c8dad57cfa903be27",
+            "aarch64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-2-arm64.tar.gz",
+            "aarch64sha": "defbdda4d0f8d15625810d9745172ca82659014771c83c477035a8475256ae42",
             "amd64url": "https://github.com/RandomCoderOrg/ubuntu-on-android/releases/download/v3/udroid-xfce4-impishTjammy-V3-maintainence-amd64.tar.gz",
             "amd64sha": "4d3585789c6932d08b887dddbd54d063bc220933e2d6a150e63c56245a9a2aef"
         },
