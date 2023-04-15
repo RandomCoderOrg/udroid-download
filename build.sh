@@ -36,7 +36,7 @@ VARIENT="raw"
 
 function build() {
     # load suites
-    _avalible_suites="$(find ./suites -type d | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' ')"
+    _avalible_suites="$(find ./suites -type d ! -name '*-*' | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' ')"
 
     # check is SUITE avalible in ./suites
     if [[ ! ${_avalible_suites} =~ $SUITE ]]; then
@@ -57,13 +57,17 @@ function build() {
     msg "Varient=$VARIENT"
     msg "ARCH=$ARCH"
     cd fs-cook || die "failed to cd ./fs-cook" # script need to executed from fs-cook root directory
+
+    # pre-exe task
+    # copy everything in name $VARIENT-* to fs-cook
+    cp -r ../suites/"$SUITE"/"$VARIENT"-* ./
     bash ../suites/"$SUITE"/"$VARIENT".sh "$ARCH"
 }
 
 function _list() {
-    for _suite in $(find ./suites -type d | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' '); do
+    for _suite in $(find ./suites -type d ! -name '*-*' | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' '); do
         echo "[SUITE] $_suite"
-        for _varient in $(find ./suites/"$_suite" -type f | cut -d / -f 4 | awk 'NF'); do
+        for _varient in $(find ./suites/"$_suite" -type f ! -name '*-*' | cut -d / -f 4 | awk 'NF'); do
             echo -e "\t -$_varient" | cut -d . -f 1
         done
     done
