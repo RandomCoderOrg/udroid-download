@@ -6,6 +6,29 @@ on:
       - main
 
 jobs:
+  BuildDE:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v2
+
+      - name: Setup Dependencies
+        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
+      
+      - name: checkout submoudles
+        run: |
+          git submodule init
+          git submodule update
+      - name: Build tarballs
+        run: |
+          sudo bash build.sh -s jammy -v xfce4Raw -a all
+      
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: de-tarballs
+          path: fs-cook/out/*.tar.gz
+
   BuildRaw:
     runs-on: ubuntu-latest
     steps:
@@ -35,9 +58,15 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - BuildRaw
+      - BuildDE
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v3
+    - name: ⬇️ Download Raw artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: de-tarballs
+    - name: ⬇️ Download DE artifacts
+      uses: actions/download-artifact@v3
       with:
         name: raw-tarballs
     - name: Compute release tag
@@ -66,7 +95,7 @@ jobs:
         prerelease: false
     - name: Sleep for sometime
       run: sleep 60
-    - name: Upload assets
+    - name: ⬆️ Upload assets
       run: |
         set -x
         assets=()
@@ -78,7 +107,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: update json
+    - name: ⚙️ update json
       run: |
         sudo apt-get install python3 -y
         sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
