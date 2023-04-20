@@ -12,7 +12,7 @@ export ENABLE_EXIT
 export ENABLE_USER_SETUP
 export INCLUDE_PACKAGES
 
-SUITE="hirsute"
+SUITE="focal"
 frn="out/$SUITE-raw"
 OVERRIDER_COMPRESSION_TYPE="gzip"
 ENABLE_EXIT=true
