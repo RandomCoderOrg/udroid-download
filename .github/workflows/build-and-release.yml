@@ -9,12 +9,11 @@ on:
 jobs:
   building-matrix:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        architecture: [ all ]
         suite: [ jammy, focal, kinetic, lunar ]
-        variant: [ raw ]
-        de: [ lxqt, kde, gnome, mate ]
+        variant: [ lxqt, kde, gnome, mate ]
+        architecture: [ arm64, armhf ]
         
     runs-on: ubuntu-latest
     steps:
@@ -30,13 +29,15 @@ jobs:
           git submodule update
           
       - name: Build ${{ matrix.suite }}-${{ matrix.variant }}
+        if: ${{ matrix.variant != raw }}
         run: |
           sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
+       
+       - name: Build ${{ matrix.suite }}-${{ matrix.variant }} raw
+         if: ${{ matrix.variant == raw }}
+         run: |
+          sudo bash build.sh -s ${{ matrix.suite }} -v raw -a ${{ matrix.architecture }}
         
-      - name: Build ${{ matrix.suite }}-${{ matrix.de }}Raw
-        run: |
-          sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.de }}Raw -a ${{ matrix.architecture }}
-          
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
