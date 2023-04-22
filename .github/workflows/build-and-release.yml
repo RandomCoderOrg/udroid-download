@@ -1,12 +1,21 @@
 name: Build and Release
 on:
   schedule: [{cron: "1 1 1 * *"}]
+  workflow_dispatch: { }
   push:
     branches:
       - main
-
+      
 jobs:
-  lxqtDE:
+  build-matrix:
+    strategy:
+      fail-fast: true
+      matrix:
+        architecture: [ all ]
+        suite: [ jammy, focal, kinetic, lunar ]
+        variant: [ raw ]
+        de: [ lxqt, kde, gnome, mate ]
+        
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,129 +28,21 @@ jobs:
         run: |
           git submodule init
           git submodule update
-      - name: Build tarballs
+          
+      - name: Build ${{ matrix.suite }}-${{ matrix.variant }}
         run: |
-          sudo bash build.sh -s jammy -v lxqtRaw -a arm64
-      
-      - name: upload artifacts
+          sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
+        
+      - name: Build ${{ matrix.suite }}-${{ matrix.de }}Raw
+        run: |
+          sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.de }}Raw -a ${{ matrix.architecture }}
+          
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: lxqtde-tarballs
+          name: ${{ matrix.suite }}-tarballs
           path: fs-cook/out/*.tar.gz
-  xfce4DE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v xfce4Raw -a arm64
-      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: xfce4de-tarballs
-          path: fs-cook/out/*.tar.gz
-  kdeDE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v kdeRaw -a arm64      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: kdede-tarballs
-          path: fs-cook/out/*.tar.gz
-  gnomeDE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s lunar -v gnomeRaw -a arm64
-
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: gnomede-tarballs
-          path: fs-cook/out/*.tar.gz
-  mateDE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v mateRaw -a arm64
-      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: matede-tarballs
-          path: fs-cook/out/*.tar.gz
-
-  BuildRaw:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v raw -a all
-          sudo bash build.sh -s kinetic -v raw -a all
-          sudo bash build.sh -s lunar -v raw -a all
-          sudo bash build.sh -s focal -v raw -a all
-      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: raw-tarballs
-          path: fs-cook/out/*.tar.gz
-    
+          
   Create-Release:
     runs-on: ubuntu-latest
     needs:
