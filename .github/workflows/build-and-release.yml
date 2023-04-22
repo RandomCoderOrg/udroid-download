@@ -28,8 +28,8 @@ jobs:
           git submodule update
           
       - name: Build ${{ matrix.suite }}-${{ matrix.variant }}
-         if: matrix.variant == raw
-         run: |
+        if: matrix.variant == raw
+        run: |
           sudo bash build.sh -s ${{ matrix.suite }} -v raw -a ${{ matrix.architecture }}
         
           
