@@ -68,15 +68,15 @@ jobs:
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
       
       - name: Pre Create Release
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ env.VERSIONTAG }}
-            release_name: ${{ env.VERSIONTAG }}
-            body_path: release.md
-            draft: false
-            prerelease: false
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSIONTAG }}
+          release_name: ${{ env.VERSIONTAG }}
+          body_path: release.md
+          draft: false
+          prerelease: false
             
             
       - name: ⬆️ Create Release for ${{ matrix.suite }}
