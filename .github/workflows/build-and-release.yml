@@ -28,13 +28,13 @@ jobs:
           git submodule update
           
       - name: Build ${{ matrix.suite }}-${{ matrix.variant }}
-        if: matrix.variant == raw
+        if: matrix.variant == "raw"
         run: |
           sudo bash build.sh -s ${{ matrix.suite }} -v raw -a ${{ matrix.architecture }}
         
           
       - name: Build ${{ matrix.suite }}-${{ matrix.variant }}Raw
-        if: matrix.variant != raw
+        if: matrix.variant != "raw"
         run: |
           sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }}Raw -a ${{ matrix.architecture }}
        
