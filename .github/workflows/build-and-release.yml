@@ -14,7 +14,6 @@ jobs:
         suite: [ jammy, focal, kinetic, lunar ]
         variant: [ lxqt, kde, gnome, mate ]
         architecture: [ arm64, armhf ]
-        
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
