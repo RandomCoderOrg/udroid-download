@@ -21,7 +21,11 @@ jobs:
           git submodule update
       - name: Build tarballs
         run: |
-          sudo bash build.sh -s jammy -v xfce4Raw -a all
+          sudo bash build.sh -s jammy -v xfce4Raw -a arm64
+          sudo bash build.sh -s jammy -v kdeRaw -a arm64
+          sudo bash build.sh -s jammy -v lxqtRaw -a arm64
+          sudo bash build.sh -s jammy -v mateRaw -a arm64
+          sudo bash build.sh -s lunar -v gnomeRaw -a arm64
       
       - name: upload artifacts
         uses: actions/upload-artifact@v3
