@@ -9,14 +9,15 @@ on:
 jobs:
   building-matrix:
     strategy:
+      max-parallel: 10
       fail-fast: false
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
-        variant: [ raw, lxqt, kde, gnome, mate ]
+        variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
         architecture: [ arm64, armhf ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
 
       - name: Setup Dependencies
@@ -27,16 +28,9 @@ jobs:
           git submodule init
           git submodule update
           
-      - name: Build ${{ matrix.suite }}-${{ matrix.variant }}
-        if: matrix.variant == 'raw'
+      - name: Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: |
-          sudo bash build.sh -s ${{ matrix.suite }} -v raw -a ${{ matrix.architecture }}
-        
-          
-      - name: Build with DE ${{ matrix.suite }}-${{ matrix.variant }}
-        if: matrix.variant != 'raw'
-        run: |
-          sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }}Raw -a ${{ matrix.architecture }}
+          sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
        
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -66,7 +60,8 @@ jobs:
         run: |
           set -x
           fscook_out=/home/runner/work/udroid-download/udroid-download/fs-cook/out
-          tarball_name=${{ matrix.suite }}-${{ matrix.architecture }}.tar.gz
+          tarball_name=${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
+            
           full="$fscook_out/$tarball_name"
           ls $fscook_out
           
