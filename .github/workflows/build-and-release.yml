@@ -14,23 +14,22 @@ jobs:
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
         variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
-        architecture: [ arm64, armhf ]
+        architecture: [ all ] # arm64, armhf ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
 
-      - name: Setup Dependencies
+      - name: Install Dependencies
         run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
       
-      - name: checkout submoudles
+      - name: Download Submodules
         run: |
           git submodule init
           git submodule update
           
       - name: Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
-        run: |
-          sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
+        run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
        
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -39,8 +38,24 @@ jobs:
           path: fs-cook/out/*.tar.gz
       
       - name: Generate Release Tag
-        run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/compute-release-tag.sh
+        run: |
+          # udroid-on-android latest tag
+          udroid_version=$(
+               git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+               https://github.com/RandomCoderOrg/ubuntu-on-android \
+               | tail -n1 | cut -d / -f 3 | cut -d v -f 2-
+          )
           
+          # udroid-download version
+          udroid_download=$(
+              git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+               https://github.com/RandomCoderOrg/udroid-download \
+               | tail -n1 | cut -d / -f 3
+          )
+
+          # export version to github environment
+          echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> "$GITHUB_ENV"
+
       - name: Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
       
@@ -56,7 +71,7 @@ jobs:
           prerelease: false
             
             
-      - name: ⬆️ Create Release for ${{ matrix.suite }}
+      - name: ⬆️ Create Release for ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: |
           set -x
           fscook_out=/home/runner/work/udroid-download/udroid-download/fs-cook/out
