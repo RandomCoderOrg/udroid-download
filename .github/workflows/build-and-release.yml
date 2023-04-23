@@ -33,7 +33,7 @@ jobs:
           sudo bash build.sh -s ${{ matrix.suite }} -v raw -a ${{ matrix.architecture }}
         
           
-      - name: Build ${{ matrix.suite }}-${{ matrix.variant }}Raw
+      - name: Build with DE ${{ matrix.suite }}-${{ matrix.variant }}
         if: matrix.variant != 'raw'
         run: |
           sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }}Raw -a ${{ matrix.architecture }}
@@ -41,30 +41,12 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.suite }}-tarballs
+          name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
           path: fs-cook/out/*.tar.gz
-          
-
-      - name: ⬇️ Download ${{ matrix.suite }} artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ matrix.suite }}-tarballs
       
-      - name: Compute Release Tag
-        run: |
-          udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-            https://github.com/RandomCoderOrg/ubuntu-on-android \
-            | tail -n1 | cut -d / -f 3 | cut -d v -f 2-
-          )
+      - name: Generate Release Tag
+        run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/compute-release-tag.sh
           
-          udroid_download=$(
-            git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-            https://github.com/RandomCoderOrg/udroid-download \
-            | tail -n1 | cut -d / -f 3
-          )
-          
-          echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
-      
       - name: Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
       
@@ -83,7 +65,12 @@ jobs:
       - name: ⬆️ Create Release for ${{ matrix.suite }}
         run: |
           set -x
+          fscook_out=/home/runner/work/udroid-download/udroid-download/fs-cook/out
+          tarball_name=${{ matrix.suite }}-${{ matrix.architecture }}.tar.gz
+          full="$fscook_out/$tarball_name"
+          ls $fscook_out
+          
           tag_name="${VERSIONTAG}"
-          hub release edit -F release.md "-a ${{ matrix.suite }}-tarballs -m "$tag_name" "$tag_name"
+          hub release edit -F release.md "-a "$full" -m "$tag_name" "$tag_name"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
