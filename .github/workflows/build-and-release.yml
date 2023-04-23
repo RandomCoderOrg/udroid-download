@@ -14,7 +14,7 @@ jobs:
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
         variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
-        architecture: [ all ] # arm64, armhf ]
+        architecture: [ armhf ] # arm64, armhf ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -62,7 +62,7 @@ jobs:
       - name: Pre Create Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: ${{ env.VERSIONTAG }}
           release_name: ${{ env.VERSIONTAG }}
