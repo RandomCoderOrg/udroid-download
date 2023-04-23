@@ -43,10 +43,11 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
+      
       - name: ⬇️ Download Tarballs
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: *-*-tarballs
+          name: '*-*-tarballs'
           name_is_regexp: true
           
       - name: "List tarballs"
