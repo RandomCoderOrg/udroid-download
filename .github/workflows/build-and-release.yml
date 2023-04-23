@@ -7,7 +7,7 @@ on:
       - main
       
 jobs:
-  building-matrix:
+  suite-build:
     strategy:
       max-parallel: 10
       fail-fast: false
@@ -36,6 +36,23 @@ jobs:
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
           path: fs-cook/out/*.tar.gz
+          
+  create-release:
+    runs-on: ubuntu-latest
+    needs: build-ubuntu
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: ⬇️ Download Tarballs
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: *-*-tarballs
+          name_is_regexp: true
+          
+      - name: "List tarballs"
+        run: |
+          ls
+          ls *.zip
       
       - name: Generate Release Tag
         run: |
@@ -74,13 +91,13 @@ jobs:
       - name: ⬆️ Create Release for ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: |
           set -x
-          fscook_out=/home/runner/work/udroid-download/udroid-download/fs-cook/out
-          tarball_name=${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
-            
-          full="$fscook_out/$tarball_name"
-          ls $fscook_out
-          
           tag_name="${VERSIONTAG}"
-          hub release edit -F release.md "-a "$full" -m "$tag_name" "$tag_name"
+          
+          assets=()
+          for asset in ./*.zip; do
+            assets+=("-a" "$asset")
+          done
+          
+          hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
