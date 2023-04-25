@@ -9,7 +9,6 @@ on:
 jobs:
   suite-build:
     strategy:
-      max-parallel: 10
       fail-fast: false
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
@@ -35,10 +34,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
-          path: fs-cook/out/*.tar.gz
+          path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
           
   create-release:
     runs-on: ubuntu-latest
+    
+    if: ${{ always() }}
     needs: suite-build
     
     steps:
@@ -47,10 +48,10 @@ jobs:
       - name: ⬇️ Download Tarballs
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: '*-*-tarballs'
+          name: '*-*-*-tarballs'
           name_is_regexp: true
           
-      - name: "List tarballs"
+      - name: List tarballs
         run: |
           ls
           ls *.zip
