@@ -13,25 +13,25 @@ jobs:
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
         variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
-        architecture: [ armhf ] # arm64, armhf ]
+        architecture: [ armhf ] # arm64, amd64 ]
     runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
 
-      - name: Install Dependencies
+      - name: ⤵️ Install Dependencies
         run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
       
-      - name: Download Submodules
+      - name: 📥 Download Submodules
         run: |
           git submodule init
           git submodule update
           
-      - name: Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
+      - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
        
-      - name: Upload artifacts
+      - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
@@ -44,16 +44,20 @@ jobs:
     needs: suite-build
     
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
-      - name: ⬇️ Download All Tarballs
-        uses: actions/download-artifact@v2
+      - name: 📥 Download All Tarballs
+        uses: actions/download-artifact@v3
         
-      - name: List tarballs
+      - name: Extract Tarballs inside Archive
+        run: |
+          ls *-*/*.tar.gz
+        
+      - name: List Tarballs
         run: |
           ls -a
       
-      - name: Generate Release Tag
+      - name: 🏷 Generate Release Tag
         run: |
           # udroid-on-android latest tag
           udroid_version=$(
@@ -72,40 +76,22 @@ jobs:
           # export version to github environment
           echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> "$GITHUB_ENV"
 
-      - name: Generate Release Notes
+      - name: 📝 Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
       
-      - name: Prepare Upload Suite Tarballs
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      - name: ⬆️ Upload Suite Tarballs
+        uses: softprops/action-gh-release@v1
         with:
+          body_path: release.md
+          token: ${{ secrets.RELEASE_TOKEN }}
           tag_name: ${{ env.VERSIONTAG }}
-          release_name: ${{ env.VERSIONTAG }}
+          name: ${{ env.VERSIONTAG }}
           body_path: release.md
           draft: false
           prerelease: false
-            
-            
-      - name: ⬆️ Upload Suite Tarballs
-        run: |
-          sudo apt install python3 -y
-          set -x
-          tag_name="${VERSIONTAG}"
-          
-          for zips in ./*.zip do
-            python3 gen_data/zip2tar-gz.py "$zips"
-          done
-          
-          assets=()
-          for asset in ./*.tar.gz; do
-            assets+=("-a" "$asset")
-          done
-          
-          hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          
+          with: |
+            *-*/*.tar.gz
+      
       - name: ⚙️ Update distro-data.json
         run: |
           sudo apt-get install python3 -y
