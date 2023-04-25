@@ -15,6 +15,7 @@ jobs:
         variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
         architecture: [ armhf ] # arm64, armhf ]
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
@@ -48,13 +49,12 @@ jobs:
       - name: ⬇️ Download Tarballs
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: '*-*-*-tarballs'
+          name: '*tarballs'
           name_is_regexp: true
           
       - name: List tarballs
         run: |
           ls
-          ls *.zip
       
       - name: Generate Release Tag
         run: |
@@ -78,7 +78,7 @@ jobs:
       - name: Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
       
-      - name: Pre Create Release
+      - name: Prepare Upload Suite Tarballs
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
@@ -90,16 +90,33 @@ jobs:
           prerelease: false
             
             
-      - name: ⬆️ Create Release for ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
+      - name: ⬆️ Upload Suite Tarballs
         run: |
+          sudo apt install python3 -y
           set -x
           tag_name="${VERSIONTAG}"
           
+          for zips in ./*.zip do
+            python3 gen_data/zip2tar-gz.py "$zips"
+          done
+          
           assets=()
-          for asset in ./*.zip; do
+          for asset in ./*.tar.gz; do
             assets+=("-a" "$asset")
           done
           
           hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          
+      - name: ⚙️ Update distro-data.json
+        run: |
+          sudo apt-get install python3 -y
+          sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
+          set +e
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add distro-data.json
+          git commit -m "AUTO: update distro-data.json"
+          git push
+          set -e
