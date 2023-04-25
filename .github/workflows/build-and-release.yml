@@ -82,7 +82,6 @@ jobs:
       - name: ⬆️ Upload Suite Tarballs
         uses: softprops/action-gh-release@v1
         with:
-          body_path: release.md
           token: ${{ secrets.RELEASE_TOKEN }}
           tag_name: ${{ env.VERSIONTAG }}
           name: ${{ env.VERSIONTAG }}
