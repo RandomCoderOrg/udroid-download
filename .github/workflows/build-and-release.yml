@@ -49,7 +49,7 @@ jobs:
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
         
-      - name: Extract Tarballs inside Archive
+      - name: List Tarballs
         run: |
           ls *-*/*.tar.gz
         
@@ -80,16 +80,15 @@ jobs:
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
       
       - name: ⬆️ Upload Suite Tarballs
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
-          tag_name: ${{ env.VERSIONTAG }}
+          tag: ${{ env.VERSIONTAG }}
           name: ${{ env.VERSIONTAG }}
-          body_path: release.md
+          bodyFile: release.md
           draft: false
           prerelease: false
-          with: |
-            *-*/*.tar.gz
+          artifacts: '*-*-tarballs/*.tar.gz'
       
       - name: ⚙️ Update distro-data.json
         run: |
