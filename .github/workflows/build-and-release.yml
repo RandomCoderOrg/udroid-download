@@ -13,7 +13,7 @@ jobs:
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
         variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
-        architecture: [ armhf ] # arm64, amd64 ]
+        architecture: [ armhf, arm64 ] # amd64 ]
     runs-on: ubuntu-latest
     
     steps:
