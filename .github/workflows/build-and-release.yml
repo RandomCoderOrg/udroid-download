@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      
+    
 jobs:
   suite-build:
     runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
@@ -20,7 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
-
+      
+      - name: ✅ Pre-Build Checks
+        run: |
+          if [ -d "suites/${{ matrix.suite }}" ]; then
+            if [ ! -d "suites/${{ matrix.suite }}/${{ matrix.variant }}" ]; then
+              echo "::error ${{ matrix.variant }} is not supported for ${{ matrix.suite }}!"
+            fi
+          else
+            echo "::error ${{ matrix.suite }} is not a valid suite!"
+          fi
+      
       - name: ⤵️ Install Dependencies
         run: |
           sudo apt-get update
@@ -30,16 +40,16 @@ jobs:
         run: |
           git submodule init
           git submodule update
-          
+      
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
-       
+      
       - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
           path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
-          
+      
   create-release:
     runs-on: ubuntu-latest
     
@@ -51,7 +61,7 @@ jobs:
       
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
-        
+      
       # Debug Purposes
       - name: List Tarballs
         run: |
@@ -84,14 +94,15 @@ jobs:
           draft: false
           prerelease: false
           artifacts: '*-*-tarballs/*.tar.gz'
+          makeLatest: true
           
       - name: ⚙️ Generate New distro-data.json
-        run: |
-          sudo apt-get install python3 -y
-          sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
-          
+        run: sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
+      
       - name: ⚙️ Update distro-data.json
         uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           commit_message: 'AUTO: update distro-data.json'
           file_pattern: distro-data.json
