@@ -8,8 +8,8 @@ on:
       
 jobs:
   suite-build:
-	max-parallel: 10
     strategy:
+      max-parallel: 10
       fail-fast: false
       matrix:
         suite: [ jammy, focal, kinetic, lunar ]
