@@ -12,7 +12,7 @@ export ENABLE_EXIT
 export ENABLE_USER_SETUP
 export INCLUDE_PACKAGES
 
-SUITE="lunar"
+SUITE="kinetic"
 VARIENT="gnomeRaw"
 frn="out/$SUITE-$VARIENT"
 OVERRIDER_COMPRESSION_TYPE="gzip"
