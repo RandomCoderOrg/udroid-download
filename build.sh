@@ -79,7 +79,7 @@ function _help() {
     msg "USAGE: ${0} [options] [value]"
     msg "options:"
     msg "-s | --suite <suite_name> : To set suite name"
-    msg "-v | --vareint <varient_name>: To set varient name [ default = raw ]"
+    msg "-v | --varient <varient_name>: To set varient name [ default = raw ]"
     msg "-a | --arch <arch name>: To set arch [ default = all ]"
     msg "-l | --list: To show all suites and varients"
     msg "examples:"
