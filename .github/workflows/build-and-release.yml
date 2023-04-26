@@ -25,10 +25,12 @@ jobs:
         run: |
           if [ -d "suites/${{ matrix.suite }}" ]; then
             if [ ! -d "suites/${{ matrix.suite }}/${{ matrix.variant }}" ]; then
-              echo "::error ${{ matrix.variant }} is not supported for ${{ matrix.suite }}!"
+              echo "Error: ${{ matrix.variant }} is not supported for ${{ matrix.suite }}!"
+              exit 1
             fi
           else
-            echo "::error ${{ matrix.suite }} is not a valid suite!"
+            echo "Error: ${{ matrix.suite }} is not a valid suite!"
+            exit 1
           fi
       
       - name: ⤵️ Install Dependencies
