@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-
+      
 jobs:
   suite-build:
     runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
@@ -60,14 +60,14 @@ jobs:
       - name: 🏷 Generate Release Tag
         run: |
           udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-            https://github.com/RandomCoderOrg/ubuntu-on-android \
-            | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
+              https://github.com/RandomCoderOrg/ubuntu-on-android \
+              | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
           
           udroid_download=$(
-          git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-            https://github.com/RandomCoderOrg/udroid-download \
-            | tail -n1 | cut -d / -f 3
-          )
+            git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+              https://github.com/RandomCoderOrg/udroid-download \
+              | tail -n1 | cut -d / -f 3
+            )
           
           echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
 
