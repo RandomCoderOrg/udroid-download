@@ -5,10 +5,10 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   suite-build:
-    runs-on: buildjet-8vcpu-ubuntu-2204 # ubuntu-latest
+    runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
     strategy:
       max-parallel: 10
       fail-fast: false
@@ -22,7 +22,9 @@ jobs:
       - uses: docker/setup-qemu-action@v2
 
       - name: ⤵️ Install Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
+        run: |
+          sudo apt-get update
+          sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
       
       - name: 📥 Download Submodules
         run: |
@@ -50,28 +52,24 @@ jobs:
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
         
+      # Debug Purposes
       - name: List Tarballs
         run: |
           ls *-*/*.tar.gz
       
       - name: 🏷 Generate Release Tag
         run: |
-          # udroid-on-android latest tag
-          udroid_version=$(
-               git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-               https://github.com/RandomCoderOrg/ubuntu-on-android \
-               | tail -n1 | cut -d / -f 3 | cut -d v -f 2-
+          udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+            https://github.com/RandomCoderOrg/ubuntu-on-android \
+            | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
+          
+          udroid_download=$(
+          git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+            https://github.com/RandomCoderOrg/udroid-download \
+            | tail -n1 | cut -d / -f 3
           )
           
-          # udroid-download version
-          udroid_download=$(
-              git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-               https://github.com/RandomCoderOrg/udroid-download \
-               | tail -n1 | cut -d / -f 3
-          )
-
-          # export version to github environment
-          echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -1} + 1))" >> "$GITHUB_ENV"
+          echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
 
       - name: 📝 Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
@@ -86,15 +84,14 @@ jobs:
           draft: false
           prerelease: false
           artifacts: '*-*-tarballs/*.tar.gz'
-      
-      - name: ⚙️ Update distro-data.json
+          
+      - name: ⚙️ Generate New distro-data.json
         run: |
           sudo apt-get install python3 -y
           sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
-          set +e
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add distro-data.json
-          git commit -m "AUTO: update distro-data.json"
-          git push
-          set -e
+          
+      - name: ⚙️ Update distro-data.json
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'AUTO: update distro-data.json'
+          file_pattern: distro-data.json
