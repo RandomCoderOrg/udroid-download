@@ -51,11 +51,10 @@ jobs:
     if: ${{ always() }}
     needs: suite-build
     
-    permissions:
-      contents: write
-    
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
@@ -99,8 +98,8 @@ jobs:
       
       - name: ⚙️ Update distro-data.json
         uses: stefanzweifel/git-auto-commit-action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
+          skip_fetch: false
+          skip_checkout: false
           commit_message: 'AUTO: update distro-data.json'
           file_pattern: distro-data.json
