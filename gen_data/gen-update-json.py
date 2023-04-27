@@ -5,6 +5,7 @@ import utils
 import arch
 
 GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
+GIT_REMOTE_URL  = os.popen("git config --get remote.origin.url").read().strip()
 DIR             = "."
 VERBOSE         = False
 JSON_CONF       = f"{GIT_ROOT}/distro-data.json"
@@ -45,8 +46,7 @@ def strip_info(file):
     return [suite, variant, packageArchitecture, basename]
 
 def get_release_url(release_tag, file) -> str:
-    repo ="https://github.com/RandomCoderOrg/udroid-download"
-    url  ="{}/releases/download/{}/{}".format(repo, release_tag, file)
+    url  ="{}/releases/download/{}/{}".format(GIT_REMOTE_URL, release_tag, file)
     return url
     
 if __name__ == '__main__':
