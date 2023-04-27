@@ -25,7 +25,7 @@ def update_data_json(file_path: str) -> None:
     # update sha
     jdata[data[0]] \
          [data[1]] \
-         [f"{data[2]}sha"] = utils.Popen( ["sha256sum", f"{file}"] )[0]
+         [f"{data[2]}sha"] = utils.Popen( ["sha256sum", f"{file_path}"] ).split()[0]
     
     # update DISTRO_DATA_JSON
     file = open(DISTRO_DATA_JSON, 'w')
