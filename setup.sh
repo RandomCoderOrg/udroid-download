@@ -6,7 +6,7 @@ shout()  { echo -e "[-] ${*}";:;}
 lshout() { echo -e "-> ${*}";:;}
 msg()    { echo -e "${*} \e[0m" >&2;:;}
 
-DEPS="debootstrap qemu-user-static binfmt-support git"
+DEPS="git build-essential binfmt-support qemu-user-static debootstrap"
 
 # ROOT user check
 if ((UID != 0 )); then
@@ -16,7 +16,7 @@ else
 fi
 
 # Force install dependencies
-shout "resolving Dependencies"
+shout "Resolving Dependencies"
 $SUDO apt update || {
     die "Failed to update indexes"
 }
