@@ -3,6 +3,11 @@ on:
   schedule: [{cron: "1 1 1 * *"}]
   workflow_dispatch: { }
   push:
+    paths-ignore:
+      - '**.md'
+      - '**.json'
+      - '.gitignore'
+      - '.vscode/**'
     branches:
       - main
 
