@@ -45,7 +45,7 @@ jobs:
 
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
-      
+
       - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v3
         with:
@@ -76,13 +76,13 @@ jobs:
           udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
               https://github.com/RandomCoderOrg/ubuntu-on-android \
               | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
-          
+
           udroid_download=$(
             git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
               https://github.com/RandomCoderOrg/udroid-download \
               | tail -n1 | cut -d / -f 3
             )
-          
+
           echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
 
       - name: 📝 Generate Release Notes

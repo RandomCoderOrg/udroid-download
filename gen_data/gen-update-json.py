@@ -4,8 +4,8 @@ import optparse
 import utils
 import arch
 
-GIT_ROOT = utils.Popen("git rev-parse --show-toplevel")
-GIT_REMOTE_URL = utils.Popen("git config --get remote.origin.url")
+GIT_ROOT = utils.Popen( ["/usr/bin/git",  "rev-parse", "--show-toplevel"] )
+GIT_REMOTE_URL = utils.Popen( ["/usr/bin/git", "config", "--get", "remote.origin.url"] )
 DIR = "."
 VERBOSE = False
 JSON_CONF = f"{GIT_ROOT}/distro-data.json"
@@ -25,7 +25,7 @@ def update_json_conf(file) -> None:
     # update sha
     jdata[data[0]] \
          [data[1]] \
-         [f"{data[2]}sha"] = os.popen(f"sha256sum {file}").read().split()[0]
+         [f"{data[2]}sha"] = utils.Popen( ["sha256sum", f"{file}"] )[0]
     
     # update JSON_CONF
     file = open(JSON_CONF, 'w')

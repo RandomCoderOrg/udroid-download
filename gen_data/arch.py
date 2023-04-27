@@ -22,7 +22,7 @@ def translated_arch() -> dict:
 
 
 def ReverseTranslate() -> dict:
-    StoPdict = translated_arch();
+    StoPdict = translated_arch()
     PtoSdict = {}
 
     for SysArch,PakArch in zip(StoPdict.keys(),StoPdict.values()):

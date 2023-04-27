@@ -84,5 +84,5 @@ def getfilesR(path: str) -> list:
     
     return files
     
-def Popen(cmd: str) -> str:
-    return subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().strip()
+def Popen(cmd: list) -> str:
+    return subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE).stdout.read().strip()
