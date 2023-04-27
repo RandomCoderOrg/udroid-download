@@ -4,11 +4,11 @@ import optparse
 import utils
 import arch
 
-GIT_ROOT        = os.popen("git rev-parse --show-toplevel").read().strip()
-GIT_REMOTE_URL  = os.popen("git config --get remote.origin.url").read().strip()
-DIR             = "."
-VERBOSE         = False
-JSON_CONF       = f"{GIT_ROOT}/distro-data.json"
+GIT_ROOT = utils.Popen("git rev-parse --show-toplevel")
+GIT_REMOTE_URL = utils.Popen("git config --get remote.origin.url")
+DIR = "."
+VERBOSE = False
+JSON_CONF = f"{GIT_ROOT}/distro-data.json"
 
 def update_json_conf(file) -> None:
     data = strip_info(file)
@@ -36,17 +36,17 @@ def strip_info(file):
     name = os.path.splitext(basename)[0]
     name = os.path.splitext(name)[0]
     
-    sp       = name.split("-")
+    sp = name.split("-")
     StoPdict = arch.translated_arch()
 
-    suite   = sp[0]
+    suite = sp[0]
     variant = sp[1]
-    packageArchitecture  = StoPdict[sp[2]]
+    packageArchitecture = StoPdict[sp[2]]
     
     return [suite, variant, packageArchitecture, basename]
 
 def get_release_url(release_tag, file) -> str:
-    url  ="{}/releases/download/{}/{}".format(GIT_REMOTE_URL, release_tag, file)
+    url = "{}/releases/download/{}/{}".format(GIT_REMOTE_URL, release_tag, file)
     return url
     
 if __name__ == '__main__':
