@@ -16,7 +16,7 @@ def generate_matrix_json() -> None:
 			element = { }
 			
 			element['suite'] = suiteName
-			element['variants'] = variantName
+			element['variant'] = variantName
 			element['architecture'] = arch
 			
 			json_data['include'].append(element)
