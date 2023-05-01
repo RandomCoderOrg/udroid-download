@@ -26,7 +26,7 @@ jobs:
     strategy:
       max-parallel: 10
       fail-fast: false
-      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
         # suite: [ jammy, focal, kinetic, lunar ]
         # variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
         # architecture: [ armhf ] #, arm64 ] #, amd64 ]
