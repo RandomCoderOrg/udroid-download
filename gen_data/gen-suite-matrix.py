@@ -21,7 +21,7 @@ def generate_matrix_json() -> None:
 			
 			json_data['include'].append(element)
 		
-	print(json.dumps(json_data, indent=4))
+	print(json.dumps(json_data, sort_keys=True, indent=None, separators=(',', ':')))
 	
 if __name__ == '__main__':
 	generate_matrix_json()
