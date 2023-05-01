@@ -17,7 +17,10 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - id: set-matrix
+      - uses: actions/checkout@v3
+      
+      - name: Generate Matrix JSON
+        id: set-matrix
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )"
 
   suite-build:
