@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
@@ -54,7 +55,19 @@ def resolv_data(
        Name: str = ...,
        FriendlyName: str = ...,
     ) -> dict:
-    
+    """Resolvs the data and add it to the json_data
+
+    Args:
+        json_data (dict): _description_
+        suite (str): _description_
+        variant (str): _description_
+        arch (list[str]): _description_
+        Name (str, optional): _description_. Defaults to ....
+        FriendlyName (str, optional): _description_. Defaults to ....
+
+    Returns:
+        dict: _description_
+    """
     if Name is ...:
         Name = f"{suite}-{variant}"
     
@@ -74,6 +87,14 @@ def resolv_data(
     return json_data
 
 def getfilesR(path: str) -> list:
+    """Get all files in a directory recursively
+
+    Args:
+        path (str): The path to the directory
+
+    Returns:
+        list: The list of files
+    """
    
     files = []
     # include depth
@@ -82,3 +103,14 @@ def getfilesR(path: str) -> list:
             files.append(os.path.join(r, file))
     
     return files
+    
+def Popen(cmd: list) -> str:
+    """Run a command and return the output as a string
+
+    Args:
+        cmd (list): The command to run
+
+    Returns:
+        str: The output of the command
+    """
+    return subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE).stdout.read().strip().decode('utf-8')

@@ -1,234 +1,106 @@
 name: Build and Release
 on:
   schedule: [{cron: "1 1 1 * *"}]
+  workflow_dispatch: { }
   push:
+    paths-ignore:
+      - '**.md'
+      - '**.json'
+      - '.gitignore'
+      - '.vscode/**'
     branches:
       - main
 
 jobs:
-  lxqtDE:
+  generate-matrix:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
+      - uses: actions/checkout@v3
+      - name: Generate Matrix JSON
+        id: set-matrix
+        run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
 
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
+  suite-build:
+    runs-on: ubuntu-latest
+    needs: generate-matrix
+    strategy:
+      max-parallel: 10
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-qemu-action@v2
+      - name: ⤵️ Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
+
+      - name: 📥 Download Submodules
         run: |
           git submodule init
           git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v lxqtRaw -a arm64
-      
-      - name: upload artifacts
+
+      - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
+        run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
+
+      - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v3
         with:
-          name: lxqtde-tarballs
-          path: fs-cook/out/*.tar.gz
-  xfce4DE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
+          name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
+          path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
 
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v xfce4Raw -a arm64
-      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
+  create-release:
+    runs-on: ubuntu-latest
+
+    if: ${{ always() }}
+    needs: suite-build
+
+    steps:
+      - uses: actions/checkout@v3
         with:
-          name: xfce4de-tarballs
-          path: fs-cook/out/*.tar.gz
-  kdeDE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 📥 Download All Tarballs
+        uses: actions/download-artifact@v3
 
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
+      - name: 🏷 Generate Release Tag
         run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v kdeRaw -a arm64      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
+          udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+              https://github.com/RandomCoderOrg/ubuntu-on-android \
+              | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
+
+          udroid_download=$(
+            git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+              https://github.com/RandomCoderOrg/udroid-download \
+              | tail -n1 | cut -d / -f 3
+            )
+
+          echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
+
+      - name: 📝 Generate Release Notes
+        run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
+
+      - name: ⬆️ Upload Suite Tarballs
+        uses: ncipollo/release-action@v1
         with:
-          name: kdede-tarballs
-          path: fs-cook/out/*.tar.gz
-  gnomeDE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
+          token: ${{ secrets.GITHUB_TOKEN  }}
+          tag: ${{ env.VERSIONTAG }}
+          name: ${{ env.VERSIONTAG }}
+          bodyFile: release.md
+          draft: false
+          prerelease: false
+          artifacts: '*-*-tarballs/*.tar.gz'
+          makeLatest: true
 
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s lunar -v gnomeRaw -a arm64
+      - name: ⚙️ Generate New distro-data.json
+        run: sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
 
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
+      - name: ⚙️ Update distro-data.json
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          name: gnomede-tarballs
-          path: fs-cook/out/*.tar.gz
-  mateDE:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v mateRaw -a arm64
-      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: matede-tarballs
-          path: fs-cook/out/*.tar.gz
-
-  BuildRaw:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v2
-
-      - name: Setup Dependencies
-        run: sudo apt-get update; sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
-      - name: checkout submoudles
-        run: |
-          git submodule init
-          git submodule update
-      - name: Build tarballs
-        run: |
-          sudo bash build.sh -s jammy -v raw -a all
-          sudo bash build.sh -s kinetic -v raw -a all
-          sudo bash build.sh -s lunar -v raw -a all
-          sudo bash build.sh -s focal -v raw -a all
-      
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: raw-tarballs
-          path: fs-cook/out/*.tar.gz
-    
-  Create-Release:
-    runs-on: ubuntu-latest
-    needs:
-      - BuildRaw
-      - xfce4DE
-      - gnomeDE
-      - mateDE
-      - lxqtDE
-      - kdeDE
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: ⬇️ Download xfce4 DE artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: xfce4de-tarballs
-    
-    - name: ⬇️ Download gnome DE artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: gnomede-tarballs
-    
-    - name: ⬇️ Download mate DE artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: matede-tarballs
-    
-    - name: ⬇️ Download lxqt DE artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: lxqtde-tarballs
-    
-    - name: ⬇️ Download kde DE artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: kdede-tarballs
-    
-    - name: ⬇️ Download RAW artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: raw-tarballs
-    - name: Compute release tag
-      run: |
-        udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-        https://github.com/RandomCoderOrg/ubuntu-on-android \
-        | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
-        udroid_download=$(
-        git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-         https://github.com/RandomCoderOrg/udroid-download \
-          | tail -n1 | cut -d / -f 3
-        )
-        echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
-    - name: Generate release notes
-      run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.VERSIONTAG }}
-        release_name: ${{ env.VERSIONTAG }}
-        body_path: release.md
-        draft: false
-        prerelease: false
-    - name: Sleep for sometime
-      run: sleep 60
-    - name: ⬆️ Upload assets
-      run: |
-        set -x
-        assets=()
-        for asset in ./*.tar.gz; do
-          assets+=("-a" "$asset")
-        done
-        tag_name="${VERSIONTAG}"
-        hub release edit -F release.md "${assets[@]}" -m "$tag_name" "$tag_name"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: ⚙️ update json
-      run: |
-        sudo apt-get install python3 -y
-        sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
-        set +e
-        git config user.name github-actions[bot]
-        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-        git add distro-data.json
-        git commit -m "AUTO: update distro-data.json"
-        git push
-        set -e
+          skip_fetch: false
+          skip_checkout: false
+          commit_message: 'AUTO JOB: (MAIN) update distro-data.json for ${{ env.VERSIONTAG }}'
+          file_pattern: distro-data.json
