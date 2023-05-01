@@ -23,15 +23,12 @@ jobs:
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
 
   suite-build:
-    runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     needs: generate-matrix
     strategy:
       max-parallel: 10
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
-        # suite: [ jammy, focal, kinetic, lunar ]
-        # variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
-        # architecture: [ armhf ] #, arm64 ] #, amd64 ]
 
     steps:
       - uses: actions/checkout@v3

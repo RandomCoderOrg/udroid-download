@@ -14,7 +14,7 @@ on:
 
 jobs:
   suite-build:
-    runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     strategy:
       max-parallel: 10
       fail-fast: false
