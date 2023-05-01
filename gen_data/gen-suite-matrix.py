@@ -4,7 +4,7 @@ import glob
 import os
 
 SUITES_DIR="./suites/*"
-ARCHITECTURES = [ "armhf" ] #, "arm64", "amd64" ]
+ARCHITECTURES = [ "all" ] #, "arm64", "amd64" ]
 
 def generate_matrix_json() -> None:
 	json_data = { "include": [ ] }
