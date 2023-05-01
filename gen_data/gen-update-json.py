@@ -62,6 +62,6 @@ if __name__ == '__main__':
     # get release tag
     RELEASE_TAG = options.release_tag
     for file_path in utils.getfilesR(DIR):
-            if file_path.endswith(".tar.gz"):
-                update_data_json(file_path)
-                
+        if file_path.endswith(".tar.gz"):
+            update_data_json(file_path)
+            

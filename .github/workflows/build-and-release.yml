@@ -12,19 +12,34 @@ on:
       - main
 
 jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )"
+
   suite-build:
     runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
+    needs: generate-matrix
     strategy:
       max-parallel: 10
       fail-fast: false
-      matrix:
-        suite: [ jammy, focal, kinetic, lunar ]
-        variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
-        architecture: [ armhf ] #, arm64 ] #, amd64 ]
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)
+        # suite: [ jammy, focal, kinetic, lunar ]
+        # variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
+        # architecture: [ armhf ] #, arm64 ] #, amd64 ]
 
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
+      
+      - name: DDBUG
+        run: |
+          echo ${{ matrix.suite }}
+          echo ${{ matrix.variant }}
+          echo ${{ matrix.architecture }}
 
       - name: ✅ Pre-Build Checks
         run: |
