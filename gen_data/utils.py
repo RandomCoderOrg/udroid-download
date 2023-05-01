@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
@@ -82,3 +83,6 @@ def getfilesR(path: str) -> list:
             files.append(os.path.join(r, file))
     
     return files
+    
+def Popen(cmd: list) -> str:
+    return subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE).stdout.read().strip().decode('utf-8')

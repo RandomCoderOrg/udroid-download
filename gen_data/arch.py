@@ -10,22 +10,22 @@ def translated_arch() -> dict:
     # SystemArchitecture:PackageArchitecture
     return dict(
         {
-            "armhf":    "armhf",
-            "arm":      "armhf",
-            "arm64":    "aarch64",
-            "aarch64":  "aarch64",
-            "amd64":    "amd64",
-            "x86_64":   "amd64"
+            "armhf": "armhf",
+            "arm": "armhf",
+            "arm64": "aarch64",
+            "aarch64": "aarch64",
+            "amd64": "amd64",
+            "x86_64": "amd64"
         }
     )
 
 
 
 def ReverseTranslate() -> dict:
-    StoPdict = translated_arch();
+    StoPdict = translated_arch()
     PtoSdict = {}
 
-    for SysArch,PakArch in zip(StoPdict.keys(),StoPdict.values()):
+    for SysArch, PakArch in zip(StoPdict.keys(),StoPdict.values()):
         if PakArch in PtoSdict: 
             PtoSdict[PakArch].append(SysArch)
         else:
