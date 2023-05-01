@@ -1,7 +1,5 @@
 import json
-import utils
 import glob
-import os
 
 SUITES_DIR="./suites/*"
 ARCHITECTURES = [ "all" ] #, "arm64", "amd64" ]
