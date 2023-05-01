@@ -3,9 +3,14 @@ on:
   schedule: [{cron: "1 1 1 * *"}]
   workflow_dispatch: { }
   push:
+    paths-ignore:
+      - '**.md'
+      - '**.json'
+      - '.gitignore'
+      - '.vscode/**'
     branches:
       - main
-    
+
 jobs:
   suite-build:
     runs-on: ubuntu-latest # buildjet-4vcpu-ubuntu-2204
@@ -16,11 +21,11 @@ jobs:
         suite: [ jammy, focal, kinetic, lunar ]
         variant: [ raw, lxqtRaw, kdeRaw, gnomeRaw, mateRaw ]
         architecture: [ armhf ] #, arm64 ] #, amd64 ]
-    
+
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
-      
+
       - name: ✅ Pre-Build Checks
         run: |
           if [ -d "suites/${{ matrix.suite }}" ]; then
@@ -32,62 +37,61 @@ jobs:
             echo "Error: ${{ matrix.suite }} is not a valid suite!"
             exit 1
           fi
-          
+
       - name: ⤵️ Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-      
+
       - name: 📥 Download Submodules
         run: |
           git submodule init
           git submodule update
-      
+
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
-      
+
       - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
           path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
-      
+
   create-release:
     runs-on: ubuntu-latest
-    
+
     if: ${{ always() }}
     needs: suite-build
-    
+
     steps:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
-      
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
-      
+
       # Debug Purposes
       - name: List Tarballs
         run: |
           ls *-*/*.tar.gz
-      
+
       - name: 🏷 Generate Release Tag
         run: |
           udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
               https://github.com/RandomCoderOrg/ubuntu-on-android \
               | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
-          
+
           udroid_download=$(
             git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
               https://github.com/RandomCoderOrg/udroid-download \
               | tail -n1 | cut -d / -f 3
             )
-          
+
           echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
 
       - name: 📝 Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
-      
+
       - name: ⬆️ Upload Suite Tarballs
         uses: ncipollo/release-action@v1
         with:
@@ -99,10 +103,10 @@ jobs:
           prerelease: false
           artifacts: '*-*-tarballs/*.tar.gz'
           makeLatest: true
-          
+
       - name: ⚙️ Generate New distro-data.json
         run: sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
-      
+
       - name: ⚙️ Update distro-data.json
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
