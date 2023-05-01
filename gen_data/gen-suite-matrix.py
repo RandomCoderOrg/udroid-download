@@ -2,7 +2,11 @@ import json
 import glob
 
 SUITES_DIR="./suites/*"
-ARCHITECTURES = [ "all" ] #, "arm64", "amd64" ]
+
+# ARCHITECTURE CAN BE: all, amd64, arm64, armhf
+# it has high priority over the architecture specified in the suite
+# set it to "all" to build all architectures defined in the <suite>/<varient>.sh file
+ARCHITECTURES = [ "all" ]
 
 def generate_matrix_json() -> None:
 	json_data = { "include": [ ] }
