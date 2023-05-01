@@ -88,7 +88,7 @@ jobs:
       - name: ⬆️ Upload Suite Tarballs
         uses: ncipollo/release-action@v1
         with:
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN  }}
           tag: ${{ env.VERSIONTAG }}
           name: ${{ env.VERSIONTAG }}
           bodyFile: release.md
