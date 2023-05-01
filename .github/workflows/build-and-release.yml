@@ -102,5 +102,5 @@ jobs:
         with:
           skip_fetch: false
           skip_checkout: false
-          commit_message: 'AUTO: update distro-data.json'
+          commit_message: 'AUTO JOB: (MAIN) update distro-data.json for ${{ env.VERSIONTAG }}'
           file_pattern: distro-data.json
