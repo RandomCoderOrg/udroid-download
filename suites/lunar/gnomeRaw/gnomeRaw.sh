@@ -12,8 +12,8 @@ export ENABLE_EXIT
 export ENABLE_USER_SETUP
 export INCLUDE_PACKAGES
 
-SUITE="focal"
-VARIENT="raw"
+SUITE="lunar"
+VARIENT="gnomeRaw"
 frn="out/$SUITE-$VARIENT"
 OVERRIDER_COMPRESSION_TYPE="gzip"
 ENABLE_EXIT=true
@@ -57,12 +57,17 @@ deb $MIRROR $SUITE-backports main restricted universe multiverse
 # deb-src $MIRROR $SUITE-backports main restricted universe multiverse
 EOF
 
-# exec $VARIENT-setup.sh
-run_shell_script "$VARIENT-setup.sh"
+# set up pv
+lshout "Setting up pv..."
+cp $ROOT_DIR/core/pv/pv-${t_arch}.deb $chroot_dir
+run_cmd "dpkg -i /pv-${t_arch}.deb"
+run_cmd "rm /pv-${t_arch}.deb"
 
 # clean any archive if exits
 apt-get clean
 
+# exec $VARIENT-setup.sh
+run_shell_script "$VARIENT-setup.sh"
 }
 
 # Option to build specific arch
