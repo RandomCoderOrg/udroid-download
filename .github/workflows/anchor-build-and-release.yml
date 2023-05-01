@@ -1,8 +1,16 @@
 name: Build and Release (Anchor)
 on:
+  schedule: [{cron: "1 1 1 * *"}]
+  workflow_dispatch: { }
   push:
+    paths-ignore:
+      - '**.md'
+      - '**.json'
+      - '.gitignore'
+      - '.vscode/**'
     branches:
       - anchor
+
 
 jobs:
   suite-build:
@@ -18,18 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
-
-      - name: ✅ Pre-Build Checks
-        run: |
-          if [ -d "suites/${{ matrix.suite }}" ]; then
-            if [ ! -d "suites/${{ matrix.suite }}/${{ matrix.variant }}" ]; then
-              echo "Error: ${{ matrix.variant }} is not supported for ${{ matrix.suite }}!"
-              exit 1
-            fi
-          else
-            echo "Error: ${{ matrix.suite }} is not a valid suite!"
-            exit 1
-          fi
 
       - name: ⤵️ Install Dependencies
         run: |
@@ -63,11 +59,6 @@ jobs:
 
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
-
-      # Debug Purposes
-      - name: List Tarballs
-        run: |
-          ls *-*/*.tar.gz
 
       - name: 🏷 Generate Release Tag
         run: |
