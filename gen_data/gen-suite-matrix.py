@@ -3,12 +3,14 @@ import glob
 
 SUITES_DIR="./suites/*"
 
-# ARCHITECTURE CAN BE: all, amd64, arm64, armhf
+# ARCHITECTURE CAN BE: amd64, arm64, armhf
 # it has high priority over the architecture specified in the suite
 # set it to "all" to build all architectures defined in the <suite>/<varient>.sh file
-ARCHITECTURES = [ "all" ]
+# "all" is currently broken!
+ARCHITECTURES = [ "all" ] #, "arm64", "armhf" ]
 
-def generate_matrix_json() -> None:
+# Can be moved to utils?
+def generate_matrix_json() -> str:
 	json_data = { "include": [ ] }
 	
 	for arch in ARCHITECTURES:
@@ -24,7 +26,7 @@ def generate_matrix_json() -> None:
 			
 			json_data['include'].append(element)
 		
-	print(json.dumps(json_data, sort_keys=True, indent=None, separators=(',', ':')))
+	return json.dumps(json_data, indent=None)
 	
 if __name__ == '__main__':
-	generate_matrix_json()
+	print(generate_matrix_json())
