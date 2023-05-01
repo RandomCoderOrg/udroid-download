@@ -18,7 +18,6 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
-      
       - name: Generate Matrix JSON
         id: set-matrix
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
@@ -37,25 +36,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
-      
-      - name: DDBUG
-        run: |
-          echo ${{ matrix.suite }}
-          echo ${{ matrix.variant }}
-          echo ${{ matrix.architecture }}
-
-      - name: ✅ Pre-Build Checks
-        run: |
-          if [ -d "suites/${{ matrix.suite }}" ]; then
-            if [ ! -d "suites/${{ matrix.suite }}/${{ matrix.variant }}" ]; then
-              echo "Error: ${{ matrix.variant }} is not supported for ${{ matrix.suite }}!"
-              exit 1
-            fi
-          else
-            echo "Error: ${{ matrix.suite }} is not a valid suite!"
-            exit 1
-          fi
-
       - name: ⤵️ Install Dependencies
         run: |
           sudo apt-get update
@@ -87,11 +67,6 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v3
-
-      # Debug Purposes
-      - name: List Tarballs
-        run: |
-          ls *-*/*.tar.gz
 
       - name: 🏷 Generate Release Tag
         run: |
