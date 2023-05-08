@@ -158,8 +158,7 @@
     },
     "kinetic": {
         "varients": [
-            "raw",
-            "gnomeRaw"
+            "raw"
         ],
         "raw": {
             "arch": [
