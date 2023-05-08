@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
-          path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}.tar.gz
+          path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-**.tar.gz
 
   create-release:
     runs-on: ubuntu-latest
