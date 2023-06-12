@@ -1,3 +1,4 @@
 *.log
 *.tests
 __pycache__
+udroid-download
