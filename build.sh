@@ -58,7 +58,7 @@ function build() {
     msg "Varient=$VARIENT"
     msg "ARCH=$ARCH"
 
-    cp -r ./suites/$SUITE/$VARIENT/*fs-cook
+    cp -r ./suites/$SUITE/$VARIENT/* fs-cook
     cd fs-cook || die "Failed to cd.."
     bash $VARIENT.sh $ARCH || die "build script failed"
     cd $UD_ROOT_DIR || die "Failed fto cd "
