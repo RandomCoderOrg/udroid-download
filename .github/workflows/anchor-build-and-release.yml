@@ -20,8 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         suite: [ jammy ]
-        variant: [ raw ]
-        architecture: [ armhf, arm64 ] #, amd64 ]
+        variant: [ gnome ]
+        architecture: [ amd64, arm64 ] #, amd64 ]
 
     steps:
       - uses: actions/checkout@v3
@@ -33,11 +33,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-
-      - name: 📥 Download Submodules
-        run: |
-          git submodule init
-          git submodule update
 
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
