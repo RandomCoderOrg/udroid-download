@@ -82,7 +82,7 @@ jobs:
           name: ${{ env.VERSIONTAG }}
           bodyFile: release.md
           draft: false
-          prerelease: false
+          prerelease: true
           artifacts: '*-*-tarballs/*.tar.gz'
           makeLatest: true
 
