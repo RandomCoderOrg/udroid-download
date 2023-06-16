@@ -21,8 +21,7 @@ jobs:
       matrix:
         suite: [ jammy ]
         variant: [ gnome ]
-        architecture: [ amd64, arm64 ] #, amd64 ]
-
+        architecture: [ amd64 ] # only amd64 for fast builds
     steps:
       - uses: actions/checkout@v3
         with:
