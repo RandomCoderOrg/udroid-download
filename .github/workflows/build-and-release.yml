@@ -18,6 +18,8 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - name: Generate Matrix JSON
         id: set-matrix
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
@@ -37,11 +39,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
-
-      - name: 📥 Download Submodules
-        run: |
-          git submodule init
-          git submodule update
 
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
@@ -96,8 +93,6 @@ jobs:
 
       - name: ⚙️ Generate New distro-data.json
         run: sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
-      
-      - run: git pull -v --rebase
 
       - name: ⚙️ Update distro-data.json
         uses: stefanzweifel/git-auto-commit-action@v4
