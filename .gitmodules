@@ -2,3 +2,7 @@
 	path = fs-cook
 	url = https://github.com/RandomCoderOrg/fs-cook
 	branch = master
+[submodule "suites/jammy/gnome"]
+	path = suites/jammy/gnome
+	url = https://github.com/RandomCoderOrg/jammy-gnome
+	branch = main
