@@ -6,3 +6,7 @@
 	path = suites/jammy/gnome
 	url = https://github.com/RandomCoderOrg/jammy-gnome
 	branch = main
+[submodule "suites/lunar/gnome"]
+	path = suites/lunar/gnome
+	url = https://github.com/RandomCoderOrg/lunar-gnome
+	branch = main
