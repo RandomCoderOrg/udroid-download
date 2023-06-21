@@ -25,12 +25,12 @@
             ],
             "Name": "udroid-jammy-raw",
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (raw)",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-raw-arm64.tar.gz",
-            "aarch64sha": "4ec1a4dd7f564e16dfa9ebd0b726eba39766ba37a8213b7b67f3c44b926b5bae",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-raw-armhf.tar.gz",
-            "armhfsha": "172c405eb9a25891d91df1f7cc1f622cf0ff8e77ad9c82be19b675618f96a823",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-raw-amd64.tar.gz",
-            "amd64sha": "44b9b51986a38facf31151021e3d7b44ca9de8cdf7ed7ff13fea28d1d496556d"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-raw-arm64.tar.gz",
+            "aarch64sha": "fd58655c0e740615ca611938c93c50c766daad68d0ba1e8235559b56fa50593e",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-raw-armhf.tar.gz",
+            "armhfsha": "c726b1be8ab93f50b4c0d854259b086aff25e452650f04c69531b9bf088104d2",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-raw-amd64.tar.gz",
+            "amd64sha": "ee1d8eaf53b4eda5a1de3b8f7cff0b399a725415c40ad6f4665a2bc133d5853b"
         },
         "xfce4": {
             "arch": [
@@ -55,12 +55,12 @@
             ],
             "Name": "udroid-jammy-gnome",
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (GNOME) [unstabl]",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-gnome-arm64.tar.gz",
-            "aarch64sha": "2354dfcd13d5d52898956e869a01b947ff211a9f61aa12a181a7e45f89dd693f",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-gnome-amd64.tar.gz",
-            "amd64sha": "90cacf08935a1d4c0f3d35ef1c48828296ce8ab527713c3a6b533dacc433c0f5",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-gnome-armhf.tar.gz",
-            "armhfsha": "c0dde0b483357708e55df4f2eb36d4a439dc2b0d88d6deeee47daf36a278fcc1"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-gnome-arm64.tar.gz",
+            "aarch64sha": "f7cb723e45eca0ac8dd74c37f227a2734c40037f82f73a3d324f46d7b3e335f8",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-gnome-amd64.tar.gz",
+            "amd64sha": "40cd7c8eda617840eb02783a79a7416782660ce3f942e64fa20b8e580d5660f2",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-gnome-armhf.tar.gz",
+            "armhfsha": "c49c83270650463093693f7f176be6b2a3084ca4fb8a9bb047a65bff5b5d1698"
         },
         "mate": {
             "arch": [
@@ -82,12 +82,12 @@
             ],
             "Name": "jammy-xfce4Raw",
             "FirendlyName": "jammy xfce4Raw",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-xfce4Raw-armhf.tar.gz",
-            "armhfsha": "5a3236e6da318093ef024202ce58985317cd52a03ed179de71efcd52f1172e15",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-xfce4Raw-arm64.tar.gz",
-            "aarch64sha": "f35ed2bceefeb158ab26292206b27ca7e92550faafe34aef0e8b127a04d88cc4",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-xfce4Raw-amd64.tar.gz",
-            "amd64sha": "3a0699192fe1bacd0506b23619cc170ed4b68e0b9c0b101803c6dccb0c4acae0"
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-xfce4Raw-armhf.tar.gz",
+            "armhfsha": "0ae43db85c0b37c1c6c6d70238c10ed9e7fc9a44400a72a1921b0168f843b9fd",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-xfce4Raw-arm64.tar.gz",
+            "aarch64sha": "2caf80183efeaa88789c21258979a4f24c3f25a9635e064536e5987dc5941c39",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-xfce4Raw-amd64.tar.gz",
+            "amd64sha": "28bd28fe6a6888a156c9dcf40fc8090b51e98472fb392a8e733c8f96c797cda8"
         },
         "kdeRaw": {
             "arch": [
@@ -100,12 +100,12 @@
             ],
             "Name": "jammy-kdeRaw",
             "FirendlyName": "jammy kdeRaw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-kdeRaw-arm64.tar.gz",
-            "aarch64sha": "a415383f61ddf7809a0a75abf80a0c631574e38bfe5c3d483862ac710cc27c8e",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-kdeRaw-armhf.tar.gz",
-            "armhfsha": "6bd5ce48db3efb357004db9018ad5ab971d316e8a914b69460ba30bfa56cb0c7",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-kdeRaw-amd64.tar.gz",
-            "amd64sha": "4ffcc59a77f86b6bbd8c6aafcf7a64c84b99ec1a1db382ad1157e75dede35d8d"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-kdeRaw-arm64.tar.gz",
+            "aarch64sha": "22a4ad3b3fe86c0729d9a7d571a737f25afd51d708d281528f6bbd75037ce7b6",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-kdeRaw-armhf.tar.gz",
+            "armhfsha": "d821bb2b7c359b3ae21b3a6952b198aa668712f3c05ad862c152995d89f2a77a",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-kdeRaw-amd64.tar.gz",
+            "amd64sha": "b6c5013454bb05c0c995f09f9212cd98d0f39eed1e04b0c9a257b86536e2d63f"
         },
         "lxqtRaw": {
             "arch": [
@@ -118,12 +118,12 @@
             ],
             "Name": "jammy-lxqtRaw",
             "FirendlyName": "jammy lxqtRaw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-lxqtRaw-arm64.tar.gz",
-            "aarch64sha": "bfc41a44c0d7061f48b047edc1cb4c6a2e3f24dd2bbaf64107d5f9505735d470",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-lxqtRaw-amd64.tar.gz",
-            "amd64sha": "d9b2af0f3baf1e56cc80fbfdeb87a7e3fc3739d79d598d9c0466e85b48c17686",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-lxqtRaw-armhf.tar.gz",
-            "armhfsha": "7dd8801e61374ec597ebbd696502f7e7fc2fa01e9fb233eddd50869351d187f6"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-lxqtRaw-arm64.tar.gz",
+            "aarch64sha": "370f397699a151c136584de61c805cba137af562bcb8c6357dc4c6562c7a254c",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-lxqtRaw-amd64.tar.gz",
+            "amd64sha": "ff5897f2e80aa54de888feb8eb8c454f0544d226de662c299dd03975a41fc961",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-lxqtRaw-armhf.tar.gz",
+            "armhfsha": "1154b5c98743dfb10a2691bf6a5082cf33e6da8459219b28cf706824a8004532"
         },
         "mateRaw": {
             "arch": [
@@ -136,12 +136,12 @@
             ],
             "Name": "jammy-mateRaw",
             "FirendlyName": "jammy mateRaw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-mateRaw-arm64.tar.gz",
-            "aarch64sha": "d27cf4d9629ef4dc9c2f2d0eb0b035e02293e63c656e7a6905f2df0bbf5e0d41",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-mateRaw-armhf.tar.gz",
-            "armhfsha": "95261810a4add0895a5dca589b3770cb2c91b610881e46b3cc6336baf183829f",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/jammy-mateRaw-amd64.tar.gz",
-            "amd64sha": "eb45ab62abd15bf37f1c1c20c609403a233b71e86b2582ebe93862b7212e30b4"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-mateRaw-arm64.tar.gz",
+            "aarch64sha": "5371d761b13c353f32c2b9673c14091372844399b2f4f26fbbec059dffe41371",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-mateRaw-armhf.tar.gz",
+            "armhfsha": "bb65322fb0ad028fd7f1a6f26aaa656d8c3b617d1dd408abd55061ea7aff504a",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-mateRaw-amd64.tar.gz",
+            "amd64sha": "71bcef3f5d622b8ee2ad75238dce5bb0433a489168beda4b47b83a187bfe06e6"
         }
     },
     "focal": {
@@ -174,12 +174,12 @@
             ],
             "Name": "focal-raw",
             "FirendlyName": "focal raw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/focal-raw-arm64.tar.gz",
-            "aarch64sha": "a951757881d3e743fc4003f61da659b2606b816b39343099e02bd9e900db31bf",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/focal-raw-amd64.tar.gz",
-            "amd64sha": "e17d4db541044e85e4c77573de49ce300f42bab8857e08985de6c73b3190d6ad",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/focal-raw-armhf.tar.gz",
-            "armhfsha": "59184f65319e8245b0d988438027c9faa4066c8ac961e5c90a6d557c0a927726"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/focal-raw-arm64.tar.gz",
+            "aarch64sha": "1ab802780c3bea58fbadb3fa490c692559406fc399e7e326e9976c7a0f862a99",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/focal-raw-amd64.tar.gz",
+            "amd64sha": "1e288391f374eb255486dcd7015ad588f7a150c2c484f42523ab8597b26daf8e",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/focal-raw-armhf.tar.gz",
+            "armhfsha": "270b1e41c2cd8c14179012e2f111d9b9702d5439d179acd1dec147d63bd61029"
         }
     },
     "kinetic": {
@@ -198,12 +198,12 @@
             ],
             "Name": "kinetic-raw",
             "FirendlyName": "Ubuntu 22.10 - Kinetic raw",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/kinetic-raw-armhf.tar.gz",
-            "armhfsha": "2f6fa32d121d2e9943e5288f7d75aed3985e2fa4b54bf06467b420d13c4c984e",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/kinetic-raw-arm64.tar.gz",
-            "aarch64sha": "f25c4656a2b0da33c7db3f6f075d8f4d4553bcc28ca286520c850b3de0feca72",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/kinetic-raw-amd64.tar.gz",
-            "amd64sha": "951d1c40319f9092ddaaf5cc6c19a79fa51dce20f6852069f8342a8919dfaca6"
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/kinetic-raw-armhf.tar.gz",
+            "armhfsha": "3471295062064d93bf2b82a5de4326051c89aad8dbec412f7dc4b7e75a8a35d0",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/kinetic-raw-arm64.tar.gz",
+            "aarch64sha": "e93e63899a238322d740e5f348112e0d1a69002b6f035ddeb13e367683722227",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/kinetic-raw-amd64.tar.gz",
+            "amd64sha": "d9b08d3a98c82c1edac436a5a48e749756ceb916e35858e34afb0b2af7068a59"
         },
         "gnomeRaw": {
             "arch": [
@@ -216,18 +216,19 @@
             ],
             "Name": "kinetic-gnomeRaw",
             "FirendlyName": "kinetic gnomeRaw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/kinetic-gnomeRaw-arm64.tar.gz",
-            "aarch64sha": "a4ffb143808f919b62ac37228be57b2681ac00793e161f2146e967126d8df7b7",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/kinetic-gnomeRaw-armhf.tar.gz",
-            "armhfsha": "45ea271d62b4acdcc8284c12ffec1566fcacbfbd2b674dee99a5ceeacdeccf27",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/kinetic-gnomeRaw-amd64.tar.gz",
-            "amd64sha": "6d03e5fcfe943865ce78764f207365c284d027745356396067a3be0c9e3f5fc7"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/kinetic-gnomeRaw-arm64.tar.gz",
+            "aarch64sha": "017a11d54e7fc82c646d4cbfa8fdbb4abb3b3dfd8c8b1c82cc832803ec978bfa",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/kinetic-gnomeRaw-armhf.tar.gz",
+            "armhfsha": "3fe7f149bd21a5582b70f877636c36c8d0fed56d9b3a8d36e1f23cb17e3ca7bc",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/kinetic-gnomeRaw-amd64.tar.gz",
+            "amd64sha": "7319026ee8ff0095e23de841eb26081b31c85ae7aec5ebfcef6a4b06016c79b5"
         }
     },
     "lunar": {
         "varients": [
             "raw",
-            "gnomeRaw"
+            "gnomeRaw",
+            "gnome"
         ],
         "raw": {
             "arch": [
@@ -240,12 +241,12 @@
             ],
             "Name": "lunar-raw",
             "FirendlyName": "Ubuntu 23.04 - Lunar raw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/lunar-raw-arm64.tar.gz",
-            "aarch64sha": "d8d0bf172143708d756d6bd2fa603f64204ab34dc34567e8e2014ca49224848b",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/lunar-raw-armhf.tar.gz",
-            "armhfsha": "90ef6a1a8da66572d38d9d1af4b0d313989427a4355c607dd67f013b9830807a",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/lunar-raw-amd64.tar.gz",
-            "amd64sha": "bc515394d326b969ae7cfa25c3dcd1e610fb2fede6514f4529d13640d84cf5c3"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-raw-arm64.tar.gz",
+            "aarch64sha": "a775bc05e100186ad73de818f98bdae1e9d667c0ea7a94cc93697a940eec1e6c",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-raw-armhf.tar.gz",
+            "armhfsha": "58836cc9a3e0fbd7186eeca61cc83d8aa69ad9dea0d26d6b2f171555faffb38c",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-raw-amd64.tar.gz",
+            "amd64sha": "beeebfc697e54d82df4ca6b1f9338c3066407bbeceaa17aaa4e631fcdb7f8762"
         },
         "gnomeRaw": {
             "arch": [
@@ -258,12 +259,30 @@
             ],
             "Name": "lunar-gnomeRaw",
             "FirendlyName": "lunar gnomeRaw",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/lunar-gnomeRaw-arm64.tar.gz",
-            "aarch64sha": "08fd052361355f1451bb93f68fef7b080b6a711eb943a7661013f060c6fafad8",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/lunar-gnomeRaw-armhf.tar.gz",
-            "armhfsha": "72f73bb2e79c8ec3b1b9299291c5541ddcc375e22850d50ff53d1fe508e3986c",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R51/lunar-gnomeRaw-amd64.tar.gz",
-            "amd64sha": "686e6d158c7b7a7b38ae0176e3fe2a45018698079bfcca9d0a2b63da7d1e0cc1"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-gnomeRaw-arm64.tar.gz",
+            "aarch64sha": "b6b0dad556dea55970407fdf2e0a6b20eec5585885c7b1e53a2aa830cf14c508",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-gnomeRaw-armhf.tar.gz",
+            "armhfsha": "ceeb29e36fe4bad38c6195fe0950d2a5dfa218407bc78b998e9fa6c8c08182e7",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-gnomeRaw-amd64.tar.gz",
+            "amd64sha": "abb46ded9d51a0d68ff5b400a50212fe5e072ca7da2a32ecf3aa1a552098afd5"
+        },
+        "gnome": {
+            "arch": [
+                "arm64",
+                "aarch64",
+                "amd64",
+                "x86_64",
+                "armhf",
+                "arm"
+            ],
+            "Name": "lunar-gnome",
+            "FirendlyName": "lunar gnome",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-gnome-arm64.tar.gz",
+            "aarch64sha": "b51865e9347fbc59bd33f08cc9c5c1a96be47ee12e42cd30e57dc15094891d1e",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-gnome-amd64.tar.gz",
+            "amd64sha": "142d4a42f526a36187172aea08c642cc7eb6d273aeb2004b541d3beb63ccf56f",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/lunar-gnome-armhf.tar.gz",
+            "armhfsha": "ed8bd6a0584d86c31e09faa5bdd6ce4f83edaab1bfc0ed3b4aa670e332cf28aa"
         }
     }
 }
