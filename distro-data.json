@@ -57,8 +57,8 @@
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (GNOME) [unstabl]",
             "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-gnome-arm64.tar.gz",
             "aarch64sha": "f7cb723e45eca0ac8dd74c37f227a2734c40037f82f73a3d324f46d7b3e335f8",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R53/jammy-gnome-amd64.tar.gz",
-            "amd64sha": "ad65a8f47284af61ba2b8035f87456aa0ac6a6744215669bb5925a5ea3920b01",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R55/jammy-gnome-amd64.tar.gz",
+            "amd64sha": "34c9c12c1ff8540edec7ee36bec356976ba88110211e52629fe65be6674b488e",
             "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R52/jammy-gnome-armhf.tar.gz",
             "armhfsha": "c49c83270650463093693f7f176be6b2a3084ca4fb8a9bb047a65bff5b5d1698"
         },
