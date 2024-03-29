@@ -1,5 +1,6 @@
 import json
 import glob
+import os
 
 SUITES_DIR="./suites/*"
 
@@ -17,9 +18,11 @@ def generate_matrix_json() -> str:
 		for variantPath in glob.iglob(f"{SUITES_DIR}/*", recursive=False):
 			suiteName = variantPath.split('/')[2]
 			variantName = variantPath.split('/')[3]
-			
-			element = { }
-			
+
+			if os.path.exists(f"{variantPath}/.no-matrix-build"):
+				continue
+
+			element = { }		
 			element['suite'] = suiteName
 			element['variant'] = variantName
 			element['architecture'] = arch
