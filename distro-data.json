@@ -26,12 +26,12 @@
             ],
             "Name": "udroid-jammy-raw",
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (raw)",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R57/jammy-raw-arm64.tar.gz",
-            "aarch64sha": "7db9bf6961a258d38cadf6947603bf4c859b7fe905c58c036b08045ea1986ca5",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R57/jammy-raw-armhf.tar.gz",
-            "armhfsha": "14ff663ad546c7eeb5f0d590fc95db7e00762ec2a01e5f2907e5dd4b9a14c012",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R57/jammy-raw-amd64.tar.gz",
-            "amd64sha": "dd3f671b737a17d020a0d70f631d702b61a8aa3a77a5ac559ff0363b2c784e5a"
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R72/jammy-raw-arm64.tar.gz",
+            "aarch64sha": "3c2fdd50b99f4816e000eebcde36dad4f23295ad30a5d36c7e19fc613c342f1d",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R72/jammy-raw-armhf.tar.gz",
+            "armhfsha": "4627b5b460d20e993a75e4533bf6fdd5fc0f28722ecaeea6185ad2eee38caa0e",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R72/jammy-raw-amd64.tar.gz",
+            "amd64sha": "a92d8a02e3da06bd8f0704c7f4fb65b83b8b28d0ae74ae2d47ca7ba8aa03dcd5"
         },
         "xfce4": {
             "arch": [
