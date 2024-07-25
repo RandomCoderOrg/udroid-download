@@ -54,7 +54,6 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
 
-    if: ${{ always() }}
     needs: suite-build
 
     steps:
@@ -96,10 +95,13 @@ jobs:
       - name: ⚙️ Generate New distro-data.json
         run: sudo python3 gen_data/gen-update-json.py --release-tag ${{ env.VERSIONTAG }}
 
+      - name: ⚙️ Run git pull
+        run: git pull -v
+
       - name: ⚙️ Update distro-data.json
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           skip_fetch: false
           skip_checkout: false
-          commit_message: 'AUTO JOB: (MAIN) update distro-data.json for ${{ env.VERSIONTAG }}'
+          commit_message: 'AUTO BOT JOB: (MAIN) update distro-data.json for ${{ env.VERSIONTAG }}'
           file_pattern: distro-data.json
