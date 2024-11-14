@@ -56,7 +56,7 @@ jobs:
       - name: 📥 Download All Tarballs
         uses: actions/download-artifact@v4.1.7
         with:
-            path: *-*-tarballs
+            path: '*-*-tarballs'
             merge-multiple: true
 
       - name: 🏷 Generate Release Tag
