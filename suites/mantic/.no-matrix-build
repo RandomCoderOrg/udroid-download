@@ -1,0 +1,3 @@
+prevents this distro from building in github actions
+
+Reason: suite reached End of life
