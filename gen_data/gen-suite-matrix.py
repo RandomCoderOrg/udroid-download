@@ -2,7 +2,7 @@ import json
 import glob
 import os
 
-SUITES_DIR="./suites/*"
+SUITES_DIR="./suites"
 
 # ARCHITECTURE CAN BE: amd64, arm64, armhf
 # it has high priority over the architecture specified in the suite
@@ -15,11 +15,14 @@ def generate_matrix_json() -> str:
 	json_data = { "include": [ ] }
 	
 	for arch in ARCHITECTURES:
-		for variantPath in glob.iglob(f"{SUITES_DIR}/*", recursive=False):
+		for variantPath in glob.iglob(f"{SUITES_DIR}/*/*", recursive=False):
 			suiteName = variantPath.split('/')[2]
 			variantName = variantPath.split('/')[3]
-		  
-			if os.path.exists(f"{variantPath}/.no-matrix-build") or os.path.exists(f"{SUITES_DIR}/{suiteName}/.no-matrix-build"):
+   
+			if os.path.exists(f"{SUITES_DIR}/{suiteName}/.no-matrix-build"):
+				continue
+			
+			if os.path.exists(f"{variantPath}/.no-matrix-build"):
 				continue
 
 			element = { }		
