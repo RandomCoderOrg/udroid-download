@@ -18,8 +18,8 @@ def generate_matrix_json() -> str:
 		for variantPath in glob.iglob(f"{SUITES_DIR}/*", recursive=False):
 			suiteName = variantPath.split('/')[2]
 			variantName = variantPath.split('/')[3]
-
-			if os.path.exists(f"{variantPath}/.no-matrix-build"):
+		  
+			if os.path.exists(f"{variantPath}/.no-matrix-build") or os.path.exists(f"{SUITES_DIR}/{suiteName}/.no-matrix-build"):
 				continue
 
 			element = { }		
