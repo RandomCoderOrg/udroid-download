@@ -3,7 +3,7 @@
 
 # this is an example file to BUILD raw file system
 # export variable SUITE to set debootstrap suite name (default: hirsute)
-
+export OVERRIDER_MIRROR="http://127.0.0.1:8080/ubuntu-ports/"
 source plugins/envsetup
 
 export OVERRIDER_COMPRESSION_TYPE
