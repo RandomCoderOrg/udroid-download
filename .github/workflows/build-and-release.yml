@@ -48,7 +48,7 @@ jobs:
       - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v4.5.0
         with:
-          name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
+          name: ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}-tarballs
           path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-**.tar.gz
 
   create-release:
