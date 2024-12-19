@@ -68,14 +68,20 @@ jobs:
           udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
               https://github.com/RandomCoderOrg/ubuntu-on-android \
               | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
-
-          udroid_download=$(
-            git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
-              https://github.com/RandomCoderOrg/udroid-download \
-              | tail -n1 | cut -d / -f 3
-            )
-
-          echo "VERSIONTAG=V${udroid_version}${BUILD_TYPE}R$((${udroid_download: -2} + 1))" >> $GITHUB_ENV
+      
+          latest_tag=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
+            https://github.com/RandomCoderOrg/udroid-download \
+            | tail -n1 | cut -d / -f 3)
+          
+          if [[ $latest_tag =~ R([0-9]+)$ ]]; then
+            current_release=${BASH_REMATCH[1]}
+          else
+            current_release=0
+          fi
+          
+          next_release=$((current_release + 1))
+          
+          echo "VERSIONTAG=V${udroid_version}ABR${next_release}" >> $GITHUB_ENV
 
       - name: 📝 Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
