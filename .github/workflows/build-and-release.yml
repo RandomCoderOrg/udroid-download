@@ -46,7 +46,7 @@ jobs:
         run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
 
       - name: ⬆️ Upload Tarballs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: ${{ matrix.suite }}-${{ matrix.architecture }}-tarballs
           path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-**.tar.gz
