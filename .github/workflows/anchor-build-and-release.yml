@@ -74,7 +74,7 @@ jobs:
           
           next_release=$((current_release + 1))
           
-          echo "VERSIONTAG=V${udroid_version}ABR${next_release}" >> $GITHUB_ENV
+          echo "VERSIONTAG=V${udroid_version}R${next_release}" >> $GITHUB_ENV
 
       - name: 📝 Generate Release Notes
         run: sudo bash /home/runner/work/udroid-download/udroid-download/.github/scripts/generate-release-notes.sh
