@@ -13,7 +13,7 @@ on:
 
 jobs:
   generate-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -25,7 +25,7 @@ jobs:
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
 
   suite-build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs: generate-matrix
     strategy:
       max-parallel: 10
@@ -52,7 +52,7 @@ jobs:
           path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-**.tar.gz
 
   create-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     needs: suite-build
 
