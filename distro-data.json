@@ -26,12 +26,12 @@
             ],
             "Name": "udroid-jammy-raw",
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (raw)",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/jammy-raw-arm64.tar.gz",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/jammy-raw-arm64.tar.gz",
             "aarch64sha": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/jammy-raw-armhf.tar.gz",
-            "armhfsha": "26bb34c73cbaad85b5718fc722370d61520c0002ad27ab06699558180f010797",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/jammy-raw-amd64.tar.gz",
-            "amd64sha": "2d94b40bf75c96c4adb957b7f7da261d83e73a0c9cd7bbd5db57e671d509dc21"
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/jammy-raw-armhf.tar.gz",
+            "armhfsha": "f48987df4ad02f77306eb0d7c717e4c2f163366a10aa675aab43af0dbe0292c1",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/jammy-raw-amd64.tar.gz",
+            "amd64sha": "eadbdf2bd7d4e9caecb6b57df303d32807fdc2f21fd58565682e8399ab27942c"
         },
         "xfce4": {
             "arch": [
@@ -56,12 +56,12 @@
             ],
             "Name": "udroid-jammy-gnome",
             "FirendlyName": "Ubuntu 22.04 LTS - Jammy (GNOME) [unstabl]",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/jammy-gnome-arm64.tar.gz",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/jammy-gnome-arm64.tar.gz",
             "aarch64sha": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/jammy-gnome-amd64.tar.gz",
-            "amd64sha": "1552fb8601f0c9d3b8a8ef69a1a994231afffe35fea74e8ef5f8747cb8161675",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/jammy-gnome-armhf.tar.gz",
-            "armhfsha": "d736403c077655b8f84cfb5ae6ec2614fc3fdc7b4e835b9059194156c65cd719"
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/jammy-gnome-amd64.tar.gz",
+            "amd64sha": "7b6ccd79abbc062767a45a4274f98f5a2932c07689f315cf294aee8dbef960b3",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/jammy-gnome-armhf.tar.gz",
+            "armhfsha": "5bd20fe681607c145c9ca56123cb0c90b1c5ea568c7357bcf2eaa899862482ea"
         },
         "mate": {
             "arch": [
@@ -198,12 +198,12 @@
             ],
             "Name": "noble-raw",
             "FirendlyName": "noble raw",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/noble-raw-amd64.tar.gz",
-            "amd64sha": "c57140fc728d43ca8da021dd5b2c9b1153334ad99307594a85893f5b3300179b",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/noble-raw-arm64.tar.gz",
-            "aarch64sha": "2647543e067485407a298ca288fbf41d2742156557f991f70fad2e80d5d34af0",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/noble-raw-armhf.tar.gz",
-            "armhfsha": "f309873e9865afec1994e0733a975ebdfc501b2a58220c1d1851c424e1bf77be"
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/noble-raw-amd64.tar.gz",
+            "amd64sha": "4f59b5e612de4e8c949fb8b86cfe8693a6ad935b1447ae35d2d4caf5e8ed3434",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/noble-raw-arm64.tar.gz",
+            "aarch64sha": "e07125f61b1d6410ae347505dedede73efb7ab80fc65bbbe1be45a4a286af328",
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/noble-raw-armhf.tar.gz",
+            "armhfsha": "0b6c6a9627f594909b03532006fc940de425e194dc37b0f7e58b98a02339507e"
         }
     },
     "oracular": {
@@ -221,12 +221,12 @@
             ],
             "Name": "oracular-raw",
             "FirendlyName": "oracular raw",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/oracular-raw-armhf.tar.gz",
-            "armhfsha": "9cc891200c7de56a84011b0a7349f82997e31edfb84ef691614104c87732c29b",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/oracular-raw-amd64.tar.gz",
-            "amd64sha": "3d2921dedb0acd080d053b9e86b5e2b37176e145d9e24a0a6f28b2137d838f0e",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/oracular-raw-arm64.tar.gz",
-            "aarch64sha": "8e4c8e6224fa745656ff4ae9525c01a1da27abe5f964bb3bfef8cdc7b9f247b8"
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/oracular-raw-armhf.tar.gz",
+            "armhfsha": "6affea274df912365e69c73c39f5b76beb4fe3500a29ae62a5d35f3b30f191ef",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/oracular-raw-amd64.tar.gz",
+            "amd64sha": "656be0a65b26aa27809987f9a7b6e4574491cdab6a3fbd5006530325b84cceef",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/oracular-raw-arm64.tar.gz",
+            "aarch64sha": "b530d1a9f6d85b5390ddecf65ebceafaf454402051bcc5f7a05ed21fb30dafde"
         }
     },
     "plucky": {
@@ -244,12 +244,12 @@
             ],
             "Name": "plucky-raw",
             "FirendlyName": "plucky raw",
-            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/plucky-raw-armhf.tar.gz",
-            "armhfsha": "692dc74c665f69e6845b1e8f0751ca3cafe5b3c3829f71b8a7b47484e5481161",
-            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/plucky-raw-amd64.tar.gz",
-            "amd64sha": "06263bfd6281d987d7d43a81bed03ce95973ba6b31dd19f8f34e5113a82ce2be",
-            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R98/plucky-raw-arm64.tar.gz",
-            "aarch64sha": "e8d9d669265c5c7c611f033ae7631294ade072586ac57cb5e19815ad9d9f945f"
+            "armhfurl": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/plucky-raw-armhf.tar.gz",
+            "armhfsha": "98c484e38d18027ba4d920a28f861948ece0cbe8e8653999569e47fb0a1916d5",
+            "amd64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/plucky-raw-amd64.tar.gz",
+            "amd64sha": "3433596fdb8dc6d7e72a7ac1b75e565fd8dfa2412c296f49fb50b0933f5bce39",
+            "aarch64url": "https://github.com/RandomCoderOrg/udroid-download/releases/download/V3R100/plucky-raw-arm64.tar.gz",
+            "aarch64sha": "39ab3edff7ed80d81a3127b755976c39145b93b8ef52a8588edfa87438ded802"
         }
     }
 }
