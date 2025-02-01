@@ -36,14 +36,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - uses: docker/setup-qemu-action@v2
       - name: ⤵️ Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
 
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
-        run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
+        run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a arm64
 
       - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v4.5.0
