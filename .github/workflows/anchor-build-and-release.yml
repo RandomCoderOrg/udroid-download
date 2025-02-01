@@ -23,7 +23,7 @@ jobs:
         variant: [ gnome ]
         architecture: [ amd64 ] # only amd64 for fast builds
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - uses: docker/setup-qemu-action@v2
@@ -49,7 +49,7 @@ jobs:
     needs: suite-build
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,19 +61,19 @@ jobs:
           udroid_version=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
               https://github.com/RandomCoderOrg/ubuntu-on-android \
               | tail -n1 | cut -d / -f 3 | cut -d v -f 2- )
-      
+
           latest_tag=$(git -c 'versionsort.suffix=-' ls-remote --tags --sort='v:refname' \
             https://github.com/RandomCoderOrg/udroid-download \
             | tail -n1 | cut -d / -f 3)
-          
+
           if [[ $latest_tag =~ R([0-9]+)$ ]]; then
             current_release=${BASH_REMATCH[1]}
           else
             current_release=0
           fi
-          
+
           next_release=$((current_release + 1))
-          
+
           echo "VERSIONTAG=V${udroid_version}R${next_release}" >> $GITHUB_ENV
 
       - name: 📝 Generate Release Notes
