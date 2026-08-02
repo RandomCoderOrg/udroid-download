@@ -22,12 +22,29 @@ jobs:
         continue-on-error: true
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
       - name: Retry checkout after a transient submodule failure
         if: steps.checkout.outcome == 'failure'
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
+      - name: Fetch pinned debootstrap source
+        env:
+          DEBOOTSTRAP_VERSION: 1.0.134ubuntu1
+          DEBOOTSTRAP_SHA256: e4077fc537d5edf9662305028b1ce7265ac4760086515be180b07b62d15f6a69
+        run: |
+          archive="$RUNNER_TEMP/debootstrap.tar.gz"
+          curl --fail --location \
+            --retry 5 --retry-all-errors \
+            --output "$archive" \
+            "https://archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}.tar.gz"
+          echo "$DEBOOTSTRAP_SHA256  $archive" | sha256sum --check --strict
+          mkdir -p fs-cook/core/debootstrap
+          tar --extract --gzip \
+            --file "$archive" \
+            --directory fs-cook/core/debootstrap \
+            --strip-components=1
+          test -x fs-cook/core/debootstrap/debootstrap
       - name: Pack pinned debootstrap source
         run: |
           tar -C fs-cook/core \
