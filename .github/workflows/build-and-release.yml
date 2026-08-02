@@ -44,7 +44,7 @@ jobs:
             --file "$archive" \
             --directory fs-cook/core/debootstrap \
             --strip-components=1
-          test -x fs-cook/core/debootstrap/debootstrap
+          test -s fs-cook/core/debootstrap/debootstrap
       - name: Pack pinned debootstrap source
         run: |
           tar -C fs-cook/core \
