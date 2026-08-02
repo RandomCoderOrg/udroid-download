@@ -39,6 +39,8 @@ esac
 for arch in $architectures; do
     shout "Bootstrapping $SUITE Plasma [$arch]"
     do_build "${frn}-${arch}" "$arch"
+    shout "Packing the Plasma root filesystem"
+    do_compress "${frn}-${arch}"
     shout "Unmounting the root filesystem"
     do_unmount "${frn}-${arch}"
 done

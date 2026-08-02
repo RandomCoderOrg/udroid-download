@@ -17,7 +17,15 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository and submodules
+        id: checkout
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Retry checkout after a transient submodule failure
+        if: steps.checkout.outcome == 'failure'
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Generate Matrix JSON
@@ -33,7 +41,15 @@ jobs:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository and submodules
+        id: checkout
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Retry checkout after a transient submodule failure
+        if: steps.checkout.outcome == 'failure'
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: ⤵️ Install Dependencies
