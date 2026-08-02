@@ -1,0 +1,127 @@
+#!/bin/bash
+set -euo pipefail
+
+kde_commit=4c0ad8fe730d32c892c84ab0dcf9a104a6fd466d
+icon_commit=b85923bb87f50578268abcff5698947a3ff24695
+gtk_commit=beeb7a25a5cd54fc7614814425b1c47d88f5897c
+logo_commit=a78371d4123650f95549436729529c7fd2a56e00
+logo_sha256=8621055fc00c37aafe7e2526bd853314e67862fc15530942efbbfe1aad1f8212
+
+expected_revisions=$(cat <<EOF
+MacTahoe-kde $kde_commit
+MacTahoe-icon-theme $icon_commit
+MacTahoe-gtk-theme $gtk_commit
+udroid-logo $logo_commit
+EOF
+)
+
+create_opaque_variants() {
+    local plasma_source=/usr/share/plasma/desktoptheme/MacTahoe-Dark
+    local plasma_target=/usr/share/plasma/desktoptheme/MacTahoe-Dark-Opaque
+    local kvantum_source=/usr/share/Kvantum/MacTahoe
+    local kvantum_target=/usr/share/Kvantum/MacTahoeOpaque
+
+    rm -rf "$plasma_target" "$kvantum_target"
+    cp -a "$plasma_source" "$plasma_target"
+    cp -f "$plasma_source/solid/dialogs/background.svgz" \
+        "$plasma_target/dialogs/background.svgz"
+    cp -f "$plasma_source/solid/widgets/panel-background.svgz" \
+        "$plasma_target/widgets/panel-background.svgz"
+    cp -f "$plasma_source/solid/widgets/tooltip.svgz" \
+        "$plasma_target/widgets/tooltip.svgz"
+    sed -i \
+        -e 's/"Id": "MacTahoe-Dark"/"Id": "MacTahoe-Dark-Opaque"/' \
+        -e 's/"Name": "MacTahoe-Dark"/"Name": "MacTahoe-Dark Opaque"/' \
+        -e 's/"enabled": true/"enabled": false/' \
+        "$plasma_target/metadata.json"
+    sed -i \
+        -e 's/^Name=MacTahoe-Dark$/Name=MacTahoe-Dark Opaque/' \
+        -e 's/^X-KDE-PluginInfo-Name=MacTahoe-Dark$/X-KDE-PluginInfo-Name=MacTahoe-Dark-Opaque/' \
+        -e 's/^enabled=true$/enabled=false/' \
+        "$plasma_target/metadata.desktop"
+
+    install -d "$kvantum_target"
+    cp "$kvantum_source/MacTahoe.svg" "$kvantum_target/MacTahoeOpaque.svg"
+    cp "$kvantum_source/MacTahoe.kvconfig" \
+        "$kvantum_target/MacTahoeOpaque.kvconfig"
+    sed -i \
+        -e 's/^translucent_windows=true$/translucent_windows=false/' \
+        -e 's/^blurring=true$/blurring=false/' \
+        -e 's/^popup_blurring=true$/popup_blurring=false/' \
+        -e 's/^reduce_menu_opacity=.*/reduce_menu_opacity=0/' \
+        -e 's/^menu_blur_radius=.*/menu_blur_radius=0/' \
+        -e 's/^tooltip_blur_radius=.*/tooltip_blur_radius=0/' \
+        -e 's/^transparent_pcmanfm_sidepane=true$/transparent_pcmanfm_sidepane=false/' \
+        -e 's/^blur_translucent=true$/blur_translucent=false/' \
+        -e 's/^transparent_menutitle=true$/transparent_menutitle=false/' \
+        -e 's/^opaque_colors=false$/opaque_colors=true/' \
+        "$kvantum_target/MacTahoeOpaque.kvconfig"
+}
+
+if [ -f /usr/share/doc/udroid-mactahoe/upstream-revisions ] && \
+        [ "$(cat /usr/share/doc/udroid-mactahoe/upstream-revisions)" = "$expected_revisions" ] && \
+        [ -d /usr/share/plasma/look-and-feel/com.github.vinceliuice.MacTahoe-Dark ] && \
+        [ -d /usr/share/icons/MacTahoe-dark ] && \
+        [ -d /usr/share/themes/MacTahoe-Dark-solid ] && \
+        [ -f /usr/share/pixmaps/udroid-logo.png ]; then
+    create_opaque_variants
+    exit 0
+fi
+
+workdir=$(mktemp -d /var/tmp/udroid-mactahoe.XXXXXX)
+trap 'rm -rf "$workdir"' EXIT
+
+fetch_repo() {
+    local repo=$1
+    local commit=$2
+    local destination="$workdir/$repo"
+
+    install -d "$destination"
+    curl --fail --location --silent --show-error --retry 3 \
+        "https://codeload.github.com/vinceliuice/$repo/tar.gz/$commit" |
+        tar -xzf - --strip-components=1 -C "$destination"
+    printf '%s\n' "$destination"
+}
+
+install -d /usr/share/themes /usr/share/icons /usr/share/doc/udroid-mactahoe \
+    /usr/share/pixmaps
+
+curl --fail --location --silent --show-error --retry 3 \
+    "https://raw.githubusercontent.com/RandomCoderOrg/ubuntu-on-android/$logo_commit/assets/udroid-logo.png" \
+    -o "$workdir/udroid-logo.png"
+printf '%s  %s\n' "$logo_sha256" "$workdir/udroid-logo.png" | sha256sum -c -
+install -m 0644 "$workdir/udroid-logo.png" /usr/share/pixmaps/udroid-logo.png
+
+kde_source=$(fetch_repo MacTahoe-kde "$kde_commit")
+for layout in \
+    "$kde_source"/plasma/look-and-feel/com.github.vinceliuice.MacTahoe-*/contents/layouts/org.kde.plasma.desktop-layout.js; do
+    sed -i \
+        '/kickoff.writeConfig("global", "Alt+F1")/a kickoff.currentConfigGroup = ["General"]\nkickoff.writeConfig("icon", "/usr/share/pixmaps/udroid-logo.png")' \
+        "$layout"
+    if ! grep -q 'org.kde.milou' "$layout"; then
+        sed -i \
+            '/panel.addWidget("org.kde.plasma.digitalclock")/a panel.addWidget("org.kde.milou")' \
+            "$layout"
+    fi
+done
+
+"$kde_source/install.sh" -c dark
+install -m 0644 "$kde_source/LICENSE" \
+    /usr/share/doc/udroid-mactahoe/MacTahoe-kde.LICENSE
+
+icon_source=$(fetch_repo MacTahoe-icon-theme "$icon_commit")
+DESKTOP_SESSION=plasma "$icon_source/install.sh" --dest /usr/share/icons
+install -m 0644 "$icon_source/COPYING" \
+    /usr/share/doc/udroid-mactahoe/MacTahoe-icon-theme.COPYING
+
+gtk_source=$(fetch_repo MacTahoe-gtk-theme "$gtk_commit")
+tar -xJf "$gtk_source/release/MacTahoe-Dark-solid.tar.xz" -C /usr/share/themes
+install -m 0644 "$gtk_source/COPYING" \
+    /usr/share/doc/udroid-mactahoe/MacTahoe-gtk-theme.COPYING
+
+printf '%s\n' "$expected_revisions" \
+    > /usr/share/doc/udroid-mactahoe/upstream-revisions
+
+gtk-update-icon-cache --force /usr/share/icons/MacTahoe >/dev/null 2>&1 || true
+gtk-update-icon-cache --force /usr/share/icons/MacTahoe-dark >/dev/null 2>&1 || true
+create_opaque_variants

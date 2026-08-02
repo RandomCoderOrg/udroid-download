@@ -1,0 +1,31 @@
+#!/bin/sh
+set -eu
+
+version=153.0.1
+archive="firefox-$version.tar.xz"
+url="https://ftp.mozilla.org/pub/firefox/releases/$version/linux-aarch64/en-US/$archive"
+sha512=c7c03b22ec7c75e4960dae33af4581426860f69477cf3b6c3ff4f65cfa4be3eaa0923f5c7c972004a4b2106c27aafe230fa5fa3a8234db2dc3c158209b75183a
+cache=/var/cache/udroid-apps
+
+if [ -x /opt/firefox/firefox ] && \
+        [ "$(/opt/firefox/firefox --version 2>/dev/null | awk '{print $3}')" = "$version" ]; then
+    ln -sfn /usr/local/libexec/udroid/firefox /usr/local/bin/firefox
+    exit 0
+fi
+
+install -d -m 0755 "$cache"
+if [ ! -f "$cache/$archive" ]; then
+    curl --fail --location --retry 3 --output "$cache/$archive.part" "$url"
+    mv "$cache/$archive.part" "$cache/$archive"
+fi
+
+actual=$(sha512sum "$cache/$archive" | awk '{print $1}')
+if [ "$actual" != "$sha512" ]; then
+    rm -f "$cache/$archive"
+    echo "Firefox $version checksum mismatch: $actual" >&2
+    exit 1
+fi
+
+rm -rf /opt/firefox
+tar -xJf "$cache/$archive" -C /opt
+ln -sfn /usr/local/libexec/udroid/firefox /usr/local/bin/firefox

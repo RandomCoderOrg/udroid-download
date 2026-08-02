@@ -1,0 +1,33 @@
+#!/bin/sh
+set -eu
+
+state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/udroid/app-compat
+install -d -m 0700 "$state_dir"
+log="$state_dir/code.log"
+set -- --ozone-platform=x11 "$@"
+
+if unshare --user --map-root-user true >/dev/null 2>&1; then
+    sandbox=namespace
+else
+    set -- --no-sandbox "$@"
+    sandbox=disabled
+    notice="$state_dir/code-reduced-isolation-notice"
+    if [ ! -e "$notice" ]; then
+        notify-send --app-name=uDroid "Visual Studio Code compatibility mode" \
+            "The Electron sandbox is disabled because PRoot cannot create user namespaces." || true
+        : > "$notice"
+    fi
+fi
+
+if [ ! -w /dev/shm ]; then
+    set -- --disable-dev-shm-usage "$@"
+    shared_memory=tmp
+else
+    shared_memory=dev-shm
+fi
+
+printf '%s sandbox=%s shared_memory=%s display=%s\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$sandbox" "$shared_memory" \
+    "${DISPLAY:-unset}" >> "$log"
+
+exec /usr/share/code/code "$@"

@@ -1,0 +1,43 @@
+#!/bin/sh
+set -eu
+
+version=151.0.7922.71-1~deb13u1
+cache=/var/cache/udroid-apps
+security_base=https://security.debian.org/debian-security/pool/updates/main/c/chromium
+debian_base=https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo
+
+chromium="chromium_${version}_arm64.deb"
+chromium_sha256=644cb37051a5f8b9340f998e5550df1adb98b014ff7a2285db4f4575079b676c
+common="chromium-common_${version}_arm64.deb"
+common_sha256=dd5a234fd562d0b0f21f7f2fa2af8ff1ff94369f4932ca9064ccba7868cc00ec
+jpeg=libjpeg62-turbo_2.1.5-4_arm64.deb
+jpeg_sha256=e4989073bb0bac8a6ec043c7adb80e1dfe601d8552233da48bb24ab45d1a1d4a
+
+if dpkg-query -W -f='${Version}' chromium 2>/dev/null | grep -qx "$version"; then
+    exit 0
+fi
+
+install -d -m 0755 "$cache"
+
+fetch() {
+    url=$1
+    file=$2
+    expected=$3
+    if [ ! -f "$cache/$file" ]; then
+        curl --fail --location --retry 3 --output "$cache/$file.part" "$url/$file"
+        mv "$cache/$file.part" "$cache/$file"
+    fi
+    actual=$(sha256sum "$cache/$file" | awk '{print $1}')
+    if [ "$actual" != "$expected" ]; then
+        rm -f "$cache/$file"
+        echo "$file checksum mismatch: $actual" >&2
+        exit 1
+    fi
+}
+
+fetch "$security_base" "$chromium" "$chromium_sha256"
+fetch "$security_base" "$common" "$common_sha256"
+fetch "$debian_base" "$jpeg" "$jpeg_sha256"
+
+apt-get install -y --no-install-recommends \
+    "$cache/$jpeg" "$cache/$common" "$cache/$chromium"

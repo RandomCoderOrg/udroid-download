@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+version=1.131.0-1785237876
+archive="code_${version}_arm64.deb"
+url="https://packages.microsoft.com/repos/code/pool/main/c/code/$archive"
+sha256=b57f73e4a8a4524bf2a796757f64bd7b594515dd8dabae9b8cd07b1beb204d9c
+cache=/var/cache/udroid-apps
+
+if dpkg-query -W -f='${Version}' code 2>/dev/null | grep -qx "$version"; then
+    exit 0
+fi
+
+install -d -m 0755 "$cache"
+if [ ! -f "$cache/$archive" ]; then
+    curl --fail --location --retry 3 --output "$cache/$archive.part" "$url"
+    mv "$cache/$archive.part" "$cache/$archive"
+fi
+
+actual=$(sha256sum "$cache/$archive" | awk '{print $1}')
+if [ "$actual" != "$sha256" ]; then
+    rm -f "$cache/$archive"
+    echo "Visual Studio Code $version checksum mismatch: $actual" >&2
+    exit 1
+fi
+
+apt-get install -y --no-install-recommends "$cache/$archive"

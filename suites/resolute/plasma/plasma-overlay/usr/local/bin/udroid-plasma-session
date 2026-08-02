@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/tmp/runtime-$(id -u)}
+export XDG_CURRENT_DESKTOP=KDE
+export XDG_SESSION_DESKTOP=KDE
+export DESKTOP_SESSION=plasma
+export KDE_FULL_SESSION=true
+export KDE_SESSION_VERSION=6
+export KDEWM=kwin_x11
+export QT_QPA_PLATFORM=xcb
+export XDG_MENU_PREFIX=plasma-
+export SHELL=${SHELL:-/bin/bash}
+
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 0700 "$XDG_RUNTIME_DIR"
+
+# VNC and PRoot sessions do not have reliable logind-backed lock ownership.
+kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock false
+kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnResume false
+kwriteconfig6 --file kwinrc --group Compositing --key Enabled true
+kwriteconfig6 --file kwinrc --group Plugins --key blurEnabled false
+kwriteconfig6 --file kwinrc --group Plugins --key backgroundcontrastEnabled false
+kwriteconfig6 --file kwinrc --group Plugins --key translucencyEnabled false
+
+exec dbus-run-session -- /bin/sh -c '
+    if [ -e "$HOME/.config/.udroid-mactahoe-pending" ]; then
+        /usr/local/bin/udroid-mactahoe
+        rm -f "$HOME/.config/.udroid-mactahoe-pending"
+    fi
+    exec startplasma-x11
+'

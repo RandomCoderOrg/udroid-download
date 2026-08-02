@@ -1,0 +1,223 @@
+#!/usr/bin/python3
+"""Measure the launch and steady-state cost of one graphical application."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+import re
+import signal
+import subprocess
+import sys
+import time
+
+
+def run(command: list[str], timeout: float = 5.0) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command, text=True, capture_output=True, timeout=timeout, check=False
+    )
+
+
+def root_windows() -> set[str]:
+    result = run(["xprop", "-root", "_NET_CLIENT_LIST", "_NET_CLIENT_LIST_STACKING"])
+    if result.returncode != 0:
+        return set()
+    return set(re.findall(r"0x[0-9a-fA-F]+", result.stdout))
+
+
+def window_pid(window: str) -> int | None:
+    result = run(["xprop", "-id", window, "_NET_WM_PID"])
+    match = re.search(r"_NET_WM_PID\(CARDINAL\) = (\d+)", result.stdout)
+    return int(match.group(1)) if match else None
+
+
+def window_pids(windows: set[str]) -> set[int]:
+    return {pid for window in windows if (pid := window_pid(window)) is not None}
+
+
+def descendants(root_pid: int) -> set[int]:
+    found = {root_pid}
+    pending = [root_pid]
+    while pending:
+        parent = pending.pop()
+        result = run(["ps", "-o", "pid=", "--ppid", str(parent)])
+        for word in result.stdout.split():
+            pid = int(word)
+            if pid not in found:
+                found.add(pid)
+                pending.append(pid)
+    return {pid for pid in found if Path(f"/proc/{pid}").exists()}
+
+
+def process_pss_kib(pids: set[int]) -> tuple[int, int]:
+    total = 0
+    measured = 0
+    for pid in pids:
+        try:
+            text = Path(f"/proc/{pid}/smaps_rollup").read_text()
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue
+        match = re.search(r"^Pss:\s+(\d+) kB$", text, re.MULTILINE)
+        if match:
+            total += int(match.group(1))
+            measured += 1
+    return total, measured
+
+
+def process_ticks(pids: set[int]) -> int:
+    total = 0
+    for pid in pids:
+        try:
+            fields = Path(f"/proc/{pid}/stat").read_text().split()
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue
+        total += int(fields[13]) + int(fields[14])
+    return total
+
+
+def capabilities() -> dict[str, object]:
+    shm = os.statvfs("/dev/shm")
+    status = Path("/proc/self/status").read_text()
+    gl = run(["glxinfo", "-B"], timeout=10)
+    renderer = "unavailable"
+    for line in gl.stdout.splitlines():
+        if "OpenGL renderer string:" in line:
+            renderer = line.split(":", 1)[1].strip()
+            break
+    userns = run(["unshare", "--user", "--map-root-user", "true"])
+    display = run(["xprop", "-root", "_NET_SUPPORTING_WM_CHECK"])
+    seccomp = re.search(r"^Seccomp:\s+(\d+)$", status, re.MULTILINE)
+    no_new_privs = re.search(r"^NoNewPrivs:\s+(\d+)$", status, re.MULTILINE)
+    return {
+        "display": os.environ.get("DISPLAY"),
+        "x11_reachable": display.returncode == 0,
+        "dbus_session": bool(os.environ.get("DBUS_SESSION_BUS_ADDRESS")),
+        "dbus_system_socket": Path("/run/dbus/system_bus_socket").exists(),
+        "user_namespace": userns.returncode == 0,
+        "user_namespace_error": userns.stderr.strip() or None,
+        "seccomp": int(seccomp.group(1)) if seccomp else None,
+        "no_new_privs": int(no_new_privs.group(1)) if no_new_privs else None,
+        "shm_writable": os.access("/dev/shm", os.W_OK),
+        "shm_available_mib": round(shm.f_bavail * shm.f_frsize / 1048576, 1),
+        "renderer": renderer,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("name")
+    parser.add_argument("command", nargs=argparse.REMAINDER)
+    parser.add_argument("--timeout", type=float, default=30.0)
+    parser.add_argument("--settle", type=float, default=10.0)
+    parser.add_argument("--sample", type=float, default=3.0)
+    parser.add_argument("--keep-running", action="store_true")
+    args = parser.parse_args()
+    command = args.command[1:] if args.command[:1] == ["--"] else args.command
+    if not command:
+        parser.error("an application command is required after --")
+
+    before = root_windows()
+    existing_pids = {
+        int(entry.name) for entry in Path("/proc").iterdir() if entry.name.isdigit()
+    }
+    started = time.monotonic()
+    process = subprocess.Popen(command, start_new_session=True)
+    first_window = None
+    new_windows: set[str] = set()
+    deadline = started + args.timeout
+    while time.monotonic() < deadline:
+        candidates = root_windows() - before
+        new_windows = {
+            window
+            for window in candidates
+            if (pid := window_pid(window)) is not None and pid not in existing_pids
+        }
+        if new_windows:
+            first_window = time.monotonic()
+            break
+        time.sleep(0.05)
+
+    if first_window is not None:
+        time.sleep(args.settle)
+    roots = window_pids(new_windows)
+    if process.poll() is None:
+        roots.add(process.pid)
+    pids = set().union(*(descendants(pid) for pid in roots)) if roots else set()
+    ticks_before = process_ticks(pids)
+    sample_started = time.monotonic()
+    time.sleep(args.sample)
+    elapsed = time.monotonic() - sample_started
+    pids = set().union(*(descendants(pid) for pid in roots)) if roots else set()
+    ticks_after = process_ticks(pids)
+    cpu_percent = max(
+        0.0,
+        (ticks_after - ticks_before) / os.sysconf("SC_CLK_TCK") / elapsed * 100,
+    )
+    pss_kib, pss_measured = process_pss_kib(pids)
+
+    payload = {
+        "schema": 1,
+        "name": args.name,
+        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "command": command,
+        "measurement": {
+            "window_timeout_seconds": args.timeout,
+            "settle_seconds": args.settle,
+            "cpu_sample_seconds": args.sample,
+        },
+        "capabilities": capabilities(),
+        "result": {
+            "window_mapped": first_window is not None,
+            "first_window_ms": round((first_window - started) * 1000)
+            if first_window
+            else None,
+            "new_windows": sorted(new_windows),
+            "process_count": len(pids),
+            "process_ids": sorted(pids),
+            "pss_mib": round(pss_kib / 1024, 1) if pss_measured else None,
+            "pss_measured_processes": pss_measured,
+            "pss_unavailable_processes": len(pids) - pss_measured,
+            "idle_cpu_percent": round(cpu_percent, 2),
+            "exit_code": process.poll(),
+        },
+    }
+
+    output_dir = (
+        Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
+        / "udroid/probes"
+    )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    filename = f"{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}-{args.name}.json"
+    output = output_dir / filename
+    output.write_text(json.dumps(payload, indent=2) + "\n")
+
+    result = payload["result"]
+    print(
+        f"{args.name}: window={result['first_window_ms']} ms, "
+        f"PSS={result['pss_mib']} MiB, idle CPU={result['idle_cpu_percent']}%, "
+        f"processes={result['process_count']}"
+    )
+    print(output)
+
+    if not args.keep_running:
+        for pid in roots:
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        if process.poll() is None:
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+                process.wait(timeout=5)
+            except (ProcessLookupError, subprocess.TimeoutExpired):
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+    return 0 if first_window is not None else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

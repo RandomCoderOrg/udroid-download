@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/udroid/app-compat
+install -d -m 0700 "$state_dir"
+log="$state_dir/firefox.log"
+
+export MOZ_ENABLE_WAYLAND=0
+
+if unshare --user --map-root-user true >/dev/null 2>&1; then
+    sandbox=namespace
+else
+    export MOZ_DISABLE_CONTENT_SANDBOX=1
+    sandbox=reduced
+    notice="$state_dir/firefox-reduced-isolation-notice"
+    if [ ! -e "$notice" ]; then
+        notify-send --app-name=uDroid "Firefox compatibility mode" \
+            "Process isolation is reduced because PRoot cannot create user namespaces." || true
+        : > "$notice"
+    fi
+fi
+
+printf '%s sandbox=%s display=%s\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$sandbox" "${DISPLAY:-unset}" >> "$log"
+
+exec /opt/firefox/firefox "$@"

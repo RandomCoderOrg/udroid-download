@@ -1,0 +1,36 @@
+#!/usr/bin/python3
+"""Render the latest uDroid application probes as compact terminal graphs."""
+
+import json
+from pathlib import Path
+
+
+probe_dir = Path.home() / ".local/state/udroid/probes"
+latest: dict[str, dict] = {}
+for path in sorted(probe_dir.glob("*.json")):
+    payload = json.loads(path.read_text())
+    latest[payload["name"]] = payload
+
+if not latest:
+    raise SystemExit(f"No probes found under {probe_dir}")
+
+
+def graph(title: str, key: str, unit: str) -> None:
+    values = {
+        name: payload["result"].get(key)
+        for name, payload in latest.items()
+        if payload["result"].get(key) is not None
+    }
+    if not values:
+        return
+    maximum = max(values.values()) or 1
+    width = max(len(name) for name in values)
+    print(f"\n{title}")
+    for name, value in sorted(values.items(), key=lambda item: item[1]):
+        bar = "#" * max(1, round(value / maximum * 32))
+        print(f"{name:<{width}} | {bar:<32} {value:g} {unit}")
+
+
+graph("First mapped window (lower is better)", "first_window_ms", "ms")
+graph("Settled proportional memory (lower is better)", "pss_mib", "MiB")
+graph("Sampled idle CPU (lower is better)", "idle_cpu_percent", "%")

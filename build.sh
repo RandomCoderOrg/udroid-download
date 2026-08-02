@@ -37,18 +37,20 @@ UD_ROOT_DIR=$(git rev-parse --show-toplevel)
 
 function build() {
     # load suites
-    _avalible_suites="$(find ./suites -maxdepth 1 -type d ! -name '*-*' | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' ')"
+    _avalible_suites="$(find ./suites -mindepth 1 -maxdepth 1 -type d \
+        -exec basename {} \; | sort)"
 
     # check is SUITE avalible in ./suites
-    if [[ ! ${_avalible_suites} =~ $SUITE ]]; then
+    if ! grep -Fqx "$SUITE" <<< "$_avalible_suites"; then
         die "$SUITE not found in ./suites"
     fi
 
     # load avalible varients
-    _avalible_varients=$(find ./suites/"$SUITE" -type d | cut -d / -f 4 | awk 'NF' | uniq -u | tr '\n' ' ')
+    _avalible_varients="$(find ./suites/"$SUITE" -mindepth 1 -maxdepth 1 \
+        -type d -exec basename {} \; | sort)"
 
     # check is varient script avalible
-    if [[ ! ${_avalible_varients} =~ $VARIENT ]]; then
+    if ! grep -Fqx "$VARIENT" <<< "$_avalible_varients"; then
         die "$VARIENT install script not found"
     fi
 
@@ -66,9 +68,11 @@ function build() {
 }
 
 function _list() {
-    for _suite in $(find ./suites -maxdepth 1 -type d ! -name '*-*' | cut -d / -f 3 | awk 'NF' | uniq -u | tr '\n' ' '); do
+    for _suite in $(find ./suites -mindepth 1 -maxdepth 1 -type d \
+        -exec basename {} \; | sort); do
         echo "[SUITE] $_suite"
-        for _varient in $(find ./suites/"$_suite" -type d ! -name '*-*' | cut -d / -f 4 | awk 'NF' | uniq -u | tr '\n' ' '); do
+        for _varient in $(find ./suites/"$_suite" -mindepth 1 -maxdepth 1 \
+            -type d -exec basename {} \; | sort); do
             echo -e "\t -$_varient"
         done
     done

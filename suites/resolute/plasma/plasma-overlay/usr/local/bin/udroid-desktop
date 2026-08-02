@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+
+display=${UDROID_DISPLAY:-:1}
+geometry=${UDROID_GEOMETRY:-1440x900}
+localhost=${UDROID_VNC_LOCALHOST:-yes}
+
+case "${1:-}" in
+    start)
+        install -d -o udroid -g udroid /tmp/runtime-1000
+        runuser -u udroid -- env \
+            HOME=/home/udroid USER=udroid LOGNAME=udroid \
+            SHELL=/bin/bash \
+            LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
+            XDG_RUNTIME_DIR=/tmp/runtime-1000 \
+            tigervncserver "$display" \
+                -geometry "$geometry" -depth 24 \
+                -localhost "$localhost" -SecurityTypes VncAuth \
+                -PasswordFile /home/udroid/.config/tigervnc/passwd \
+                -xstartup /usr/local/bin/udroid-plasma-session
+        ;;
+    stop)
+        runuser -u udroid -- env HOME=/home/udroid \
+            tigervncserver -kill "$display" >/dev/null 2>&1 || true
+        ;;
+    *)
+        echo "usage: udroid-desktop {start|stop}" >&2
+        exit 2
+        ;;
+esac
