@@ -28,6 +28,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Pack pinned debootstrap source
+        run: |
+          tar -C fs-cook/core \
+            --exclude=debootstrap/.git \
+            -cf "$RUNNER_TEMP/debootstrap-source.tar" \
+            debootstrap
+      - name: Share pinned debootstrap source
+        uses: actions/upload-artifact@v4.5.0
+        with:
+          name: debootstrap-source
+          path: ${{ runner.temp }}/debootstrap-source.tar
+          retention-days: 1
       - name: Generate Matrix JSON
         id: set-matrix
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
@@ -46,12 +58,21 @@ jobs:
         continue-on-error: true
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
       - name: Retry checkout after a transient submodule failure
         if: steps.checkout.outcome == 'failure'
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
+      - name: Download pinned debootstrap source
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: debootstrap-source
+          path: ${{ runner.temp }}/debootstrap-source
+      - name: Restore pinned debootstrap source
+        run: |
+          tar -C fs-cook/core \
+            -xf "$RUNNER_TEMP/debootstrap-source/debootstrap-source.tar"
       - name: ⤵️ Install Dependencies
         run: |
           sudo apt-get update
