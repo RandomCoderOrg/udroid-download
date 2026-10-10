@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
-# Run inside a Noble rootfs after its theme assets and XFCE config are copied.
+# Install XFCE4 and upstream themes inside a Noble root filesystem.
 set -euo pipefail
 
-for asset in \
-    /usr/share/themes/udroid-xfsmooth-light/gtk-3.0/gtk.css \
-    /usr/share/icons/udroid-tela-black/index.theme; do
-    if [ ! -f "$asset" ]; then
-        echo "Missing $asset. Copy the bundle from suites/noble/xfce4/assets first." >&2
-        exit 1
-    fi
-done
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Run this script as root inside the target root filesystem." >&2
+    exit 1
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-bash "$SCRIPT_DIR/xfce4-setup.sh"
-bash "$SCRIPT_DIR/xfce4-extra.sh"
-bash "$SCRIPT_DIR/xfce4-fixes.sh"
-bash "$SCRIPT_DIR/xfce4-cleanup.sh"
-echo "XFCE setup complete. Start it with: /usr/local/bin/udroid-xfce4-x11"
+
+for script in \
+    xfce4-setup.sh \
+    xfce4-extra.sh \
+    xfce4-themes.sh \
+    xfce4-fixes.sh \
+    xfce4-cleanup.sh
+do
+    bash "$SCRIPT_DIR/$script"
+done
+
+echo "XFCE setup complete. Start with: /usr/local/bin/udroid-xfce4-x11"

@@ -26,34 +26,10 @@ EOF_SOURCES
     run_cmd "dpkg -i /pv-${t_arch}.deb"
     run_cmd "rm -f /pv-${t_arch}.deb"
 
-    # ROOT_DIR is the fs-cook repository; suite sources live beside it.
-    local assets_dir="$ROOT_DIR/../suites/$SUITE/$VARIENT/assets"
-    [ -d "$assets_dir/themes/udroid-xfsmooth-light" ] || die "Missing bundled GTK theme: $assets_dir"
-    [ -d "$assets_dir/icons/udroid-tela-black" ] || die "Missing bundled icon theme: $assets_dir"
-    [ -d "$assets_dir/config/xfce-perchannel-xml" ] || die "Missing bundled XFCE configuration: $assets_dir"
-
-    mkdir -p "$chroot_dir/usr/share/themes" "$chroot_dir/usr/share/icons"
-    cp -r "$assets_dir/themes/udroid-xfsmooth-light" "$chroot_dir/usr/share/themes/"
-    cp -r "$assets_dir/icons/udroid-tela-black" "$chroot_dir/usr/share/icons/"
-    chmod -R a+rX "$chroot_dir/usr/share/themes/udroid-xfsmooth-light" \
-        "$chroot_dir/usr/share/icons/udroid-tela-black"
-
-    # Install settings for root and as defaults for subsequently created users.
-    local home cfg
-    for home in "$chroot_dir/root" "$chroot_dir/etc/skel"; do
-        cfg="$home/.config/xfce4"
-        mkdir -p "$cfg/xfconf/xfce-perchannel-xml"
-        cp -r "$assets_dir/config/xfce-perchannel-xml/." \
-            "$cfg/xfconf/xfce-perchannel-xml/"
-        if [ -d "$assets_dir/config/panel" ]; then
-            cp -r "$assets_dir/config/panel" "$cfg/"
-        fi
-        find "$cfg" -type f -exec chmod 0644 {} +
-    done
-
-    # Intentionally do not copy Jammy's desktop wallpaper configuration.
+    # Install XFCE and configure themes at build time without bundling assets.
     run_shell_script "$VARIENT-setup.sh"
     run_shell_script "$VARIENT-extra.sh"
+    run_shell_script "$VARIENT-themes.sh"
     run_shell_script "$VARIENT-fixes.sh"
     run_shell_script "$VARIENT-cleanup.sh"
 }
