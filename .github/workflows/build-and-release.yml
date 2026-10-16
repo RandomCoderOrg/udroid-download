@@ -57,7 +57,7 @@ jobs:
           name: debootstrap-source
           path: ${{ runner.temp }}/debootstrap-source.tar
           retention-days: 30
-      - name: Check Chromium installer
+      - name: Check Plasma builders
         run: python3 -m unittest discover -s tests -v
       - name: Generate Matrix JSON
         id: set-matrix
