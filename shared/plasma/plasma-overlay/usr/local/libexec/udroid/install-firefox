@@ -10,7 +10,7 @@ if [ "$ID" = debian ]; then
         -e 's|^StartupWMClass=.*|StartupWMClass=firefox-esr|' \
         /usr/local/share/applications/firefox.desktop
     # Hide the native launcher, which bypasses uDroid's PRoot wrapper.
-    printf '[Desktop Entry]\nType=Application\nHidden=true\n' \
+    printf '[Desktop Entry]\nType=Application\nName=Firefox ESR\nHidden=true\n' \
         > /usr/local/share/applications/firefox-esr.desktop
     ln -sfn /usr/local/libexec/udroid/firefox /usr/local/bin/firefox
     exit 0
