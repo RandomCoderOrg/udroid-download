@@ -56,7 +56,9 @@ jobs:
         with:
           name: debootstrap-source
           path: ${{ runner.temp }}/debootstrap-source.tar
-          retention-days: 1
+          retention-days: 30
+      - name: Check Chromium installer
+        run: python3 -m unittest discover -s tests -v
       - name: Generate Matrix JSON
         id: set-matrix
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
