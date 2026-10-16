@@ -2,6 +2,13 @@
 set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
+# shellcheck disable=SC1091
+source /etc/os-release
+case "$ID" in
+    debian) distro_packages=(fonts-liberation adwaita-icon-theme) ;;
+    ubuntu) distro_packages=(fonts-ubuntu adwaita-icon-theme-full plasma-session-x11) ;;
+    *) echo "Unsupported Plasma distribution: $ID" >&2; exit 1 ;;
+esac
 
 cp -a /udroid-build/overlay/. /
 chmod 0755 \
@@ -28,16 +35,18 @@ apt-get install -y --no-install-recommends \
     procps iproute2 net-tools file xz-utils zstd \
     dbus dbus-x11 x11-xserver-utils tigervnc-standalone-server tigervnc-tools \
     gvfs libgl1-mesa-dri mesa-utils \
-    fonts-ubuntu fonts-noto-core fonts-noto-color-emoji \
+    "${distro_packages[@]}" fonts-noto-core fonts-noto-color-emoji \
     fonts-inter-variable fonts-jetbrains-mono \
-    yaru-theme-gtk yaru-theme-icon adwaita-icon-theme-full \
-    plasma-desktop plasma-workspace plasma-session-x11 kwin-x11 \
+    yaru-theme-gtk yaru-theme-icon \
+    plasma-desktop plasma-workspace kwin-x11 \
     dolphin konsole systemsettings qt6-style-kvantum plasma-widgets-addons \
     ark kate okular gwenview keepassxc mpv kcalc \
     kde-spectacle plasma-systemmonitor \
     libnotify-bin python3-minimal util-linux x11-utils
 
-locale-gen en_US.UTF-8
+sed -i 's/^# *en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 if ! id udroid >/dev/null 2>&1; then
     useradd --create-home --shell /bin/bash --groups sudo,audio,video,plugdev udroid
 fi
@@ -66,7 +75,7 @@ update-desktop-database /usr/local/share/applications 2>/dev/null || true
 touch /home/udroid/.config/.udroid-mactahoe-pending
 chown udroid:udroid /home/udroid/.config/.udroid-mactahoe-pending
 
-printf 'uDroid Resolute Plasma\n' > /etc/udroid-image
+printf 'uDroid %s Plasma\n' "$PRETTY_NAME" > /etc/udroid-image
 touch /.udroid-plasma-ready
 
 apt-get clean

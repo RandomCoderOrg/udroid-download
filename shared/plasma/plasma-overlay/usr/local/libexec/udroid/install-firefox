@@ -1,6 +1,14 @@
 #!/bin/sh
 set -eu
 
+# shellcheck disable=SC1091
+. /etc/os-release
+if [ "$ID" = debian ]; then
+    apt-get install -y --no-install-recommends firefox-esr
+    ln -sfn /usr/local/libexec/udroid/firefox /usr/local/bin/firefox
+    exit 0
+fi
+
 version=153.0.1
 archive="firefox-$version.tar.xz"
 url="https://ftp.mozilla.org/pub/firefox/releases/$version/linux-aarch64/en-US/$archive"

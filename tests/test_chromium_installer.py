@@ -7,14 +7,20 @@ import unittest
 
 
 INSTALLER = Path(__file__).resolve().parents[1] / (
-    "suites/resolute/plasma/plasma-overlay/usr/local/libexec/udroid/install-chromium"
+    "shared/plasma/plasma-overlay/usr/local/libexec/udroid/install-chromium"
 )
 
 
 class ChromiumInstallerTest(unittest.TestCase):
-    def run_installer(self, **overrides):
+    def run_installer(self, distro="ubuntu", **overrides):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            release = root / "os-release"
+            release.write_text(f"ID={distro}\n")
+            installer = root / "installer.sh"
+            installer.write_text(INSTALLER.read_text().replace(
+                ". /etc/os-release", '. "$TEST_OS_RELEASE"',
+            ))
             log = root / "commands.jsonl"
             stub = root / "stub"
             stub.write_text("""#!/usr/bin/env python3
@@ -38,9 +44,10 @@ elif command == 'apt-get':
             for command in ("dpkg", "apt-get", "apt-cache", "dpkg-query"):
                 (root / command).symlink_to(stub)
             result = subprocess.run(
-                ["sh", str(INSTALLER)], capture_output=True, text=True,
+                ["sh", str(installer)], capture_output=True, text=True,
                 env={**os.environ, "PATH": f"{root}:{os.environ['PATH']}",
-                     "COMMAND_LOG": str(log), "TMPDIR": str(root), **overrides},
+                     "COMMAND_LOG": str(log), "TMPDIR": str(root),
+                     "TEST_OS_RELEASE": str(release), **overrides},
             )
             commands = [json.loads(line) for line in log.read_text().splitlines()]
             leftovers = [path for path in root.iterdir() if path.is_dir()]
@@ -59,6 +66,13 @@ elif command == 'apt-get':
         self.assertEqual(len(installs), 2)
         self.assertFalse(any(arg.startswith("Dir::") for arg in installs[-1]))
         self.assertEqual(sum(arg.endswith(".deb") for arg in installs[-1]), 3)
+
+    def test_debian_uses_only_native_apt_packages(self):
+        result, commands = self.run_installer(distro="debian")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(commands, [[
+            "apt-get", "install", "-y", "--no-install-recommends", "chromium",
+        ]])
 
     def test_failures_never_reach_package_installation(self):
         for overrides in ({"FAIL_STAGE": "update"}, {"FAIL_STAGE": "download"},

@@ -23,4 +23,7 @@ fi
 printf '%s sandbox=%s display=%s\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$sandbox" "${DISPLAY:-unset}" >> "$log"
 
+if [ -x /usr/bin/firefox-esr ]; then
+    exec /usr/bin/firefox-esr "$@"
+fi
 exec /opt/firefox/firefox "$@"
