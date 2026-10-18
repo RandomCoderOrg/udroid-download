@@ -37,7 +37,35 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/xdg-runtime-$(id -u)}"
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 unset DBUS_SESSION_BUS_ADDRESS DBUS_SYSTEM_BUS_ADDRESS
+
+# Prepare the system bus for non-systemd PRoot environments.
+mkdir -p /run/dbus
+dbus-uuidgen --ensure=/etc/machine-id >/dev/null 2>&1 || true
+
+# Try the normal service first.
 service dbus start >/dev/null 2>&1 || true
+
+# Recover if the system bus is stale or unresponsive.
+if ! dbus-send --system --print-reply \
+  --dest=org.freedesktop.DBus / org.freedesktop.DBus.ListNames \
+  >/dev/null 2>&1; then
+  if [ -s /run/dbus/pid ]; then
+    dbus_pid="$(cat /run/dbus/pid)"
+    case "$dbus_pid" in
+      ''|*[!0-9]*) ;;
+      *) kill "$dbus_pid" 2>/dev/null || true ;;
+    esac
+  fi
+
+  rm -f /run/dbus/system_bus_socket /run/dbus/pid
+  dbus-daemon --system --fork --nopidfile --nosyslog
+fi
+
+# Verify recovery before starting GNOME.
+dbus-send --system --print-reply \
+  --dest=org.freedesktop.DBus / org.freedesktop.DBus.ListNames \
+  >/dev/null
+
 if command -v dbus-run-session >/dev/null 2>&1; then
   exec dbus-run-session -- gnome-shell --x11 --sm-disable
 fi
