@@ -31,6 +31,11 @@ mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 unset DBUS_SESSION_BUS_ADDRESS DBUS_SYSTEM_BUS_ADDRESS
 
+# Clean stale seat records so GNOME doesn't hang waiting for logind
+if ! pgrep -x systemd-logind >/dev/null 2>&1; then
+  rm -rf -- /run/systemd/seats
+fi
+
 # Prepare the system bus for non-systemd PRoot environments.
 mkdir -p /run/dbus
 dbus-uuidgen --ensure=/etc/machine-id >/dev/null 2>&1 || true
