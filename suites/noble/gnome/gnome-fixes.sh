@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# Prevent activation of systemd logind inside a non-systemd PRoot environment.
-mkdir -p /root/login1-disabled
-if [[ -f /usr/share/dbus-1/system-services/org.freedesktop.login1.service ]]; then
-  mv /usr/share/dbus-1/system-services/org.freedesktop.login1.service \
-     /root/login1-disabled/org.freedesktop.login1.service
-fi
-
 mkdir -p /etc/profile.d /etc/dconf/profile /etc/dconf/db/local.d
 cat > /etc/profile.d/gtk-cairo.sh <<'PROFILE'
 export GSK_RENDERER=cairo
