@@ -6,7 +6,7 @@ source plugins/envsetup
 
 SUITE=noble
 VARIENT=gnome
-frn=out/noble-gnome
+frn=out/noble-gnomeRaw
 OVERRIDER_COMPRESSION_TYPE=gzip
 ENABLE_EXIT=true
 ENABLE_USER_SETUP=false
