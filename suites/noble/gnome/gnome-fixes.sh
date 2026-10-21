@@ -24,7 +24,6 @@ export XDG_CURRENT_DIR=GNOME
 export XDG_CURRENT_DESKTOP=GNOME
 export XDG_SESSION_DESKTOP=gnome
 export DESKTOP_SESSION=gnome
-export GALLIUM_DRIVER=virpipe
 export GSK_RENDERER=cairo
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/xdg-runtime-$(id -u)}"
 mkdir -p "$XDG_RUNTIME_DIR"
