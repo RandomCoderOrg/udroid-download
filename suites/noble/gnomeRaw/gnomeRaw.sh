@@ -24,7 +24,7 @@ SOURCES
      "$chroot_dir/etc/dconf/db/local.d/00-udroid-gnome"
 
   mkdir -p "$chroot_dir/tmp"
-  for script in gnome-setup.sh gnome-extra.sh gnome-fixes.sh gnome-cleanup.sh; do
+  for script in gnome-setup.sh gnome-extra.sh gnome-fixes.sh gnome-apt-cleanup.sh; do
     lshout "Running $script inside rootfs"
     cp "$ROOT_DIR/$script" "$chroot_dir/tmp/$script"
     do_chroot_ae "$chroot_dir" "/bin/bash /tmp/$script"
