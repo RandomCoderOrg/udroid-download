@@ -21,7 +21,9 @@ export XDG_CURRENT_DIR=GNOME
 export XDG_CURRENT_DESKTOP=GNOME
 export XDG_SESSION_DESKTOP=gnome
 export DESKTOP_SESSION=gnome
-export GALLIUM_DRIVER=virpipe
-export GSK_RENDERER=cairo
+# Optional: enable VirGL rendering if supported by your environment.
+# export GALLIUM_DRIVER=virpipe
+# Optional: force GTK software rendering if needed.
+# export GSK_RENDERER=cairo
 PROFILE
 chmod 0644 /etc/profile.d/gnome-termux-x11.sh
