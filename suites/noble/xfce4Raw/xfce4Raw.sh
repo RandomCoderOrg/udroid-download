@@ -6,7 +6,8 @@ source plugins/envsetup
 
 export OVERRIDER_COMPRESSION_TYPE SUITE ENABLE_EXIT ENABLE_USER_SETUP INCLUDE_PACKAGES
 SUITE="noble"
-VARIENT="xfce4"
+VARIENT="xfce4Raw"
+HELPER_PREFIX="xfce4"
 frn="out/$SUITE-$VARIENT"
 OVERRIDER_COMPRESSION_TYPE="gzip"
 ENABLE_EXIT=true
@@ -27,11 +28,11 @@ EOF_SOURCES
     run_cmd "rm -f /pv-${t_arch}.deb"
 
     # Install XFCE and configure themes at build time without bundling assets.
-    run_shell_script "$VARIENT-setup.sh"
-    run_shell_script "$VARIENT-extra.sh"
-    run_shell_script "$VARIENT-themes.sh"
-    run_shell_script "$VARIENT-fixes.sh"
-    run_shell_script "$VARIENT-cleanup.sh"
+    run_shell_script "$HELPER_PREFIX-setup.sh"
+    run_shell_script "$HELPER_PREFIX-extra.sh"
+    run_shell_script "$HELPER_PREFIX-themes.sh"
+    run_shell_script "$HELPER_PREFIX-fixes.sh"
+    run_shell_script "$HELPER_PREFIX-cleanup-apt-cache.sh"
 }
 
 case "${1:-}" in
