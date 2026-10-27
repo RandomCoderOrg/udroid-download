@@ -87,6 +87,55 @@ do_unmount() { :; }
         name = "trixie-plasma-arm64.tar.gz"
         self.assertEqual(release["strip_info"](name), ["trixie", "plasma", "aarch64", name])
 
+    def test_catalogue_distributions_are_explicit_and_match_the_generator(self):
+        sys.path.insert(0, str(ROOT / "gen_data"))
+        try:
+            import utils
+            catalogue = json.loads((ROOT / "distro-data.json").read_text())
+            entrypoints = [
+                script for script in (ROOT / "suites").glob("*/*/*.sh")
+                if script.stem == script.parent.name
+            ]
+            self.assertTrue(entrypoints)
+            by_suite = {}
+            for script in entrypoints:
+                suite, variant = script.parents[1].name, script.parent.name
+                distribution = utils.distribution_for_variant(suite, variant)
+                self.assertEqual(by_suite.setdefault(suite, distribution), distribution)
+                if suite in catalogue:
+                    self.assertEqual(catalogue[suite]["distribution"], distribution)
+            generated = utils.resolv_data({"suites": []}, "trixie", "plasma", [])
+            self.assertEqual(generated["trixie"]["distribution"], "debian")
+        finally:
+            sys.path.pop(0)
+
+    def test_new_debian_variants_need_only_a_distribution_declaration(self):
+        sys.path.insert(0, str(ROOT / "gen_data"))
+        try:
+            import utils
+            with tempfile.TemporaryDirectory() as directory:
+                suites = Path(directory)
+                for suite, variant in (("sid", "raw"), ("trixie", "gnome")):
+                    script = suites / suite / variant / f"{variant}.sh"
+                    script.parent.mkdir(parents=True)
+                    script.write_text("#!/usr/bin/env bash\nexport DISTRIBUTION=debian\n")
+                with mock.patch.object(utils, "SUITES_DIR", suites):
+                    generated = utils.resolv_data({"suites": []}, "sid", "raw", [])
+                    generated = utils.resolv_data(generated, "trixie", "gnome", [])
+                    self.assertEqual(generated["sid"]["distribution"], "debian")
+                    self.assertEqual(generated["trixie"]["distribution"], "debian")
+
+                    plasma = suites / "trixie" / "plasma" / "plasma.sh"
+                    plasma.parent.mkdir()
+                    plasma.write_text("export DISTRIBUTION=ubuntu\n")
+                    with self.assertRaises(ValueError):
+                        utils.resolv_data(generated, "trixie", "plasma", [])
+                    plasma.write_text("#!/usr/bin/env bash\n")
+                    with self.assertRaises(ValueError):
+                        utils.distribution_for_variant("trixie", "plasma")
+        finally:
+            sys.path.pop(0)
+
 
 if __name__ == "__main__":
     unittest.main()

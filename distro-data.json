@@ -10,6 +10,7 @@
         "trixie"
     ],
     "jammy": {
+        "distribution": "ubuntu",
         "varients": [
             "raw",
             "xfce4",
@@ -149,6 +150,7 @@
         }
     },
     "focal": {
+        "distribution": "ubuntu",
         "varients": [
             "xfce4",
             "raw"
@@ -187,6 +189,7 @@
         }
     },
     "noble": {
+        "distribution": "ubuntu",
         "varients": [
             "raw",
             "xfce4",
@@ -255,6 +258,7 @@
         }
     },
     "oracular": {
+        "distribution": "ubuntu",
         "varients": [
             "raw"
         ],
@@ -278,6 +282,7 @@
         }
     },
     "plucky": {
+        "distribution": "ubuntu",
         "varients": [
             "raw"
         ],
@@ -301,6 +306,7 @@
         }
     },
     "questing": {
+        "distribution": "ubuntu",
         "varients": [
             "raw"
         ],
@@ -320,6 +326,7 @@
         }
     },
     "resolute": {
+        "distribution": "ubuntu",
         "varients": [
             "raw",
             "plasma"
@@ -350,6 +357,7 @@
         }
     },
     "trixie": {
+        "distribution": "debian",
         "varients": [
             "plasma"
         ],
