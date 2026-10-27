@@ -36,7 +36,6 @@ automatically; the release job adds its URL and checksum to `distro-data.json`
 after a successful build and release. Both Plasma targets share the provisioning
 scripts and overlay in `shared/plasma/`.
 
-Each variant entry script must declare its distro ID as a literal line such as
-`export DISTRIBUTION=debian`. The release generator reads that line into
-`distro-data.json` and rejects missing declarations or conflicting IDs within
-one suite.
+The release generator reads `ID` from each completed archive's `os-release`
+file and records it in `distro-data.json`. New variants need no separate distro
+mapping; conflicting IDs within one suite fail release metadata generation.

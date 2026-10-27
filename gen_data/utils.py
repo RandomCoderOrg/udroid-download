@@ -1,27 +1,27 @@
 import os
-from pathlib import Path
 import re
 import subprocess
-
-SUITES_DIR = Path(__file__).resolve().parents[1] / "suites"
-DISTRIBUTION_DECLARATION = re.compile(
-    r"^export DISTRIBUTION=(?P<quote>['\"]?)(?P<id>[a-z][a-z0-9_-]*)(?P=quote)$"
-)
+import tarfile
 
 
-def distribution_for_variant(suite: str, variant: str) -> str:
-    script = SUITES_DIR / suite / variant / f"{variant}.sh"
-    declarations = []
-    for line in script.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line.startswith("export DISTRIBUTION"):
-            match = DISTRIBUTION_DECLARATION.fullmatch(line)
-            if not match:
-                raise ValueError(f"{script}: use a literal export DISTRIBUTION=<id>")
-            declarations.append(match.group("id"))
-    if len(declarations) != 1:
-        raise ValueError(f"{script}: expected exactly one export DISTRIBUTION=<id>")
-    return declarations[0]
+def distribution_from_archive(path: str) -> str:
+    with tarfile.open(path, "r|gz") as archive:
+        for member in archive:
+            name = member.name.lstrip("/").removeprefix("./")
+            if name not in ("etc/os-release", "usr/lib/os-release"):
+                continue
+            if not member.isfile():
+                continue
+            release = archive.extractfile(member)
+            if release is None:
+                continue
+            for line in release.read().decode("utf-8").splitlines():
+                if line.startswith("ID="):
+                    distribution = line[3:].strip().strip("\"'")
+                    if re.fullmatch(r"[a-z0-9._-]+", distribution):
+                        return distribution
+                    raise ValueError(f"{path}: invalid os-release ID")
+    raise ValueError(f"{path}: no valid /etc/os-release or /usr/lib/os-release ID")
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
@@ -74,6 +74,7 @@ def resolv_data(
        suite: str,
        variant: str,
        arch: list[str],
+       distribution: str,
        Name: str = ...,
        FriendlyName: str = ...,
     ) -> dict:
@@ -96,8 +97,6 @@ def resolv_data(
     if FriendlyName is ...:
         FriendlyName = f"{suite} {variant}"
 
-    distribution = distribution_for_variant(suite, variant)
-        
     if suite not in json_data["suites"]:
         add_suite(json_data,suite)
 

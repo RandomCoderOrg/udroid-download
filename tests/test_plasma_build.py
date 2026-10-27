@@ -1,9 +1,11 @@
 import json
+import io
 import os
 from pathlib import Path
 import runpy
 import subprocess
 import sys
+import tarfile
 import tempfile
 import unittest
 from unittest import mock
@@ -87,52 +89,53 @@ do_unmount() { :; }
         name = "trixie-plasma-arm64.tar.gz"
         self.assertEqual(release["strip_info"](name), ["trixie", "plasma", "aarch64", name])
 
-    def test_catalogue_distributions_are_explicit_and_match_the_generator(self):
-        sys.path.insert(0, str(ROOT / "gen_data"))
-        try:
-            import utils
-            catalogue = json.loads((ROOT / "distro-data.json").read_text())
-            entrypoints = [
-                script for script in (ROOT / "suites").glob("*/*/*.sh")
-                if script.stem == script.parent.name
-            ]
-            self.assertTrue(entrypoints)
-            by_suite = {}
-            for script in entrypoints:
-                suite, variant = script.parents[1].name, script.parent.name
-                distribution = utils.distribution_for_variant(suite, variant)
-                self.assertEqual(by_suite.setdefault(suite, distribution), distribution)
-                if suite in catalogue:
-                    self.assertEqual(catalogue[suite]["distribution"], distribution)
-            generated = utils.resolv_data({"suites": []}, "trixie", "plasma", [])
-            self.assertEqual(generated["trixie"]["distribution"], "debian")
-        finally:
-            sys.path.pop(0)
-
-    def test_new_debian_variants_need_only_a_distribution_declaration(self):
+    def test_catalogue_uses_os_release_from_completed_archives(self):
         sys.path.insert(0, str(ROOT / "gen_data"))
         try:
             import utils
             with tempfile.TemporaryDirectory() as directory:
-                suites = Path(directory)
-                for suite, variant in (("sid", "raw"), ("trixie", "gnome")):
-                    script = suites / suite / variant / f"{variant}.sh"
-                    script.parent.mkdir(parents=True)
-                    script.write_text("#!/usr/bin/env bash\nexport DISTRIBUTION=debian\n")
-                with mock.patch.object(utils, "SUITES_DIR", suites):
-                    generated = utils.resolv_data({"suites": []}, "sid", "raw", [])
-                    generated = utils.resolv_data(generated, "trixie", "gnome", [])
-                    self.assertEqual(generated["sid"]["distribution"], "debian")
-                    self.assertEqual(generated["trixie"]["distribution"], "debian")
+                archive_path = Path(directory) / "sid-raw-arm64.tar.gz"
+                with tarfile.open(archive_path, "w:gz") as archive:
+                    link = tarfile.TarInfo("/etc/os-release")
+                    link.type = tarfile.SYMTYPE
+                    link.linkname = "../usr/lib/os-release"
+                    archive.addfile(link)
+                    release = b"NAME=Debian GNU/Linux\nID=debian\n"
+                    file = tarfile.TarInfo("/usr/lib/os-release")
+                    file.size = len(release)
+                    archive.addfile(file, io.BytesIO(release))
+                distribution = utils.distribution_from_archive(str(archive_path))
+                self.assertEqual(distribution, "debian")
+                generated = utils.resolv_data({"suites": []}, "sid", "raw", [], distribution)
+                generated = utils.resolv_data(generated, "trixie", "gnome", [], distribution)
+                self.assertEqual(generated["sid"]["distribution"], "debian")
+                self.assertEqual(generated["trixie"]["distribution"], "debian")
+                with self.assertRaises(ValueError):
+                    utils.resolv_data(generated, "trixie", "plasma", [], "ubuntu")
 
-                    plasma = suites / "trixie" / "plasma" / "plasma.sh"
-                    plasma.parent.mkdir()
-                    plasma.write_text("export DISTRIBUTION=ubuntu\n")
-                    with self.assertRaises(ValueError):
-                        utils.resolv_data(generated, "trixie", "plasma", [])
-                    plasma.write_text("#!/usr/bin/env bash\n")
-                    with self.assertRaises(ValueError):
-                        utils.distribution_for_variant("trixie", "plasma")
+                ubuntu_path = Path(directory) / "resolute-raw-arm64.tar.gz"
+                with tarfile.open(ubuntu_path, "w:gz") as archive:
+                    release = b'NAME=Ubuntu\nID="ubuntu"\n'
+                    file = tarfile.TarInfo("/etc/os-release")
+                    file.size = len(release)
+                    archive.addfile(file, io.BytesIO(release))
+                self.assertEqual(utils.distribution_from_archive(str(ubuntu_path)), "ubuntu")
+        finally:
+            sys.path.pop(0)
+
+    def test_os_release_requires_a_valid_id(self):
+        sys.path.insert(0, str(ROOT / "gen_data"))
+        try:
+            import utils
+            with tempfile.TemporaryDirectory() as directory:
+                archive_path = Path(directory) / "image.tar.gz"
+                with tarfile.open(archive_path, "w:gz") as archive:
+                    release = b"NAME=Ubuntu\nID_LIKE=debian\n"
+                    file = tarfile.TarInfo("/etc/os-release")
+                    file.size = len(release)
+                    archive.addfile(file, io.BytesIO(release))
+                with self.assertRaises(ValueError):
+                    utils.distribution_from_archive(str(archive_path))
         finally:
             sys.path.pop(0)
 
