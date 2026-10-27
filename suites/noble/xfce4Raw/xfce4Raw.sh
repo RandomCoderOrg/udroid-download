@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export DISTRIBUTION=ubuntu
 # Build the Ubuntu Noble XFCE4 variant for uDroid.
 # shellcheck disable=SC1091
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export DISTRIBUTION=ubuntu
 set -e
 
 # fs-cook variant entry point for Ubuntu Noble GNOME.
