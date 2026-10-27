@@ -1,27 +1,5 @@
 import os
-from pathlib import Path
-import re
 import subprocess
-
-SUITES_DIR = Path(__file__).resolve().parents[1] / "suites"
-DISTRIBUTION_DECLARATION = re.compile(
-    r"^export DISTRIBUTION=(?P<quote>['\"]?)(?P<id>[a-z][a-z0-9_-]*)(?P=quote)$"
-)
-
-
-def distribution_for_variant(suite: str, variant: str) -> str:
-    script = SUITES_DIR / suite / variant / f"{variant}.sh"
-    declarations = []
-    for line in script.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line.startswith("export DISTRIBUTION"):
-            match = DISTRIBUTION_DECLARATION.fullmatch(line)
-            if not match:
-                raise ValueError(f"{script}: use a literal export DISTRIBUTION=<id>")
-            declarations.append(match.group("id"))
-    if len(declarations) != 1:
-        raise ValueError(f"{script}: expected exactly one export DISTRIBUTION=<id>")
-    return declarations[0]
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
@@ -95,16 +73,9 @@ def resolv_data(
     
     if FriendlyName is ...:
         FriendlyName = f"{suite} {variant}"
-
-    distribution = distribution_for_variant(suite, variant)
         
     if suite not in json_data["suites"]:
         add_suite(json_data,suite)
-
-    existing_distribution = json_data[suite].get("distribution")
-    if existing_distribution not in (None, distribution):
-        raise ValueError(f"{suite}: distribution changed from {existing_distribution} to {distribution}")
-    json_data[suite]["distribution"] = distribution
     
     if variant not in json_data[suite]["varients"]:
         add_varient(json_data, suite, variant, Name, FriendlyName)

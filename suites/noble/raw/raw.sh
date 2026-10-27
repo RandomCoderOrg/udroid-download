@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-export DISTRIBUTION=ubuntu
 #shellcheck disable=SC1091
 
 # this is an example file to BUILD raw file system

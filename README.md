@@ -35,8 +35,3 @@ The archive is `fs-cook/out/trixie-plasma-arm64.tar.gz`. CI discovers the target
 automatically; the release job adds its URL and checksum to `distro-data.json`
 after a successful build and release. Both Plasma targets share the provisioning
 scripts and overlay in `shared/plasma/`.
-
-Each variant entry script must declare its distro ID as a literal line such as
-`export DISTRIBUTION=debian`. The release generator reads that line into
-`distro-data.json` and rejects missing declarations or conflicting IDs within
-one suite.
