@@ -54,10 +54,10 @@ deb $MIRROR $SUITE-backports main restricted universe multiverse
 # deb-src $MIRROR $SUITE-backports main restricted universe multiverse
 EOF
 
-# set up pv
-lshout "Setting up pv..."
+# set up pv and sudo.
+lshout "Setting up pv-and-sudo..."
 run_cmd "apt update"
-run_cmd "apt install pv -y"
+run_cmd "apt install pv sudo -y"
 
 # clean any archive if exits
 apt-get clean
