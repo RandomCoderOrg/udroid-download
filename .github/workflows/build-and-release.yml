@@ -101,7 +101,15 @@ jobs:
           sudo apt-get install git build-essential binfmt-support qemu-user-static debootstrap -y
 
       - name: 🛠️ Build ${{ matrix.suite }}-${{ matrix.variant }}-${{ matrix.architecture }}
-        run: sudo bash build.sh -s ${{ matrix.suite }} -v ${{ matrix.variant }} -a ${{ matrix.architecture }}
+        env:
+          SUITE: ${{ matrix.suite }}
+          VARIANT: ${{ matrix.variant }}
+          ARCHITECTURE: ${{ matrix.architecture }}
+        run: |
+          sudo bash build.sh \
+            -s "$SUITE" \
+            -v "$VARIANT" \
+            -a "$ARCHITECTURE"
 
       - name: ⬆️ Upload Tarballs
         uses: actions/upload-artifact@v4.5.0
