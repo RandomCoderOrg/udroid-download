@@ -37,6 +37,22 @@ class PluckyGnomeBuildTest(unittest.TestCase):
             [{"suite": "plucky", "variant": "gnomeRaw", "architecture": "arm64"}],
         )
 
+    def test_proot_fix_disables_systemd_login1_dbus_activation(self):
+        fixes = (VARIANT / "gnomeRaw-fixes.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            "/usr/share/dbus-1/system-services/org.freedesktop.login1.service",
+            fixes,
+        )
+        self.assertIn("/root/login1-disabled", fixes)
+        self.assertRegex(
+            fixes,
+            r"if \\[\\[ -e \\"\\$login1_service\\" \\|\\| -L \\"\\$login1_service\\" \\]\\]; then",
+        )
+        self.assertRegex(
+            fixes,
+            r"mv -f \\"\\$login1_service\\" /root/login1-disabled/",
+        )
+
     def test_variant_scripts_and_embedded_launcher_have_valid_bash_syntax(self):
         for script in SCRIPTS:
             with self.subTest(script=script.name):
