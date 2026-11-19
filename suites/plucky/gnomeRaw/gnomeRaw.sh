@@ -59,9 +59,10 @@ esac
 build_target="${frn}-${arch}"
 shout "Building Plucky GNOME for ${arch}"
 
-# fs-cook's do_build() performs compression unless NO_COMPRESSION is set.
-# Do not call do_compress() again here; that would pack the same rootfs twice.
+# fs-cook's do_build() only bootstraps and provisions the rootfs.
+# The caller must compress it explicitly before unmounting the chroot.
 do_build "$build_target" "$arch"
+do_compress "$build_target"
 do_unmount "$build_target"
 build_target=""
 
