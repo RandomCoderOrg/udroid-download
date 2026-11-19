@@ -44,13 +44,13 @@ class PluckyGnomeBuildTest(unittest.TestCase):
             fixes,
         )
         self.assertIn("/root/login1-disabled", fixes)
-        self.assertRegex(
+        self.assertIn(
+            'if [[ -e "$login1_service" || -L "$login1_service" ]]; then',
             fixes,
-            r"if \\[\\[ -e \\"\\$login1_service\\" \\|\\| -L \\"\\$login1_service\\" \\]\\]; then",
         )
-        self.assertRegex(
+        self.assertIn(
+            'mv -f "$login1_service" /root/login1-disabled/',
             fixes,
-            r"mv -f \\"\\$login1_service\\" /root/login1-disabled/",
         )
 
     def test_variant_scripts_and_embedded_launcher_have_valid_bash_syntax(self):
