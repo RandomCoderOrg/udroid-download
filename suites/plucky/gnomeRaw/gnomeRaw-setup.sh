@@ -15,7 +15,7 @@ apt-get update
 apt-get install -y \
   gnome-core gnome-shell gnome-control-center nautilus gnome-terminal \
   gnome-shell-extensions gnome-shell-extension-ubuntu-dock \
-  dbus dbus-x11 xorg xauth x11-utils x11-xserver-utils \
+  dbus dbus-bin dbus-x11 dconf-cli xorg xauth x11-utils x11-xserver-utils \
   mesa-utils libgl1-mesa-dri libglx-mesa0 libegl1 libgles2 libgbm1 libdrm2 \
   locales network-manager sudo nano wget curl git ca-certificates \
   fonts-ubuntu fonts-noto-color-emoji
