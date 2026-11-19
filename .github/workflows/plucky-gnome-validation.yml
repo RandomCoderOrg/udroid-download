@@ -1,6 +1,15 @@
 name: Plucky GNOME validation
 
 on:
+  push:
+    branches:
+      - feat/plucky-gnome-llvmpipe
+    paths:
+      - "suites/plucky/gnomeRaw/**"
+      - "tests/test_plucky_gnome.py"
+      - "gen_data/gen-suite-matrix.py"
+      - "build.sh"
+      - ".github/workflows/plucky-gnome-validation.yml"
   pull_request:
     paths:
       - "suites/plucky/gnomeRaw/**"
@@ -40,7 +49,6 @@ jobs:
             --output "$archive" \
             "https://archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}.tar.gz"
           echo "$DEBOOTSTRAP_SHA256  $archive" | sha256sum --check --strict
-          rm -rf fs-cook/core/debootstrap
           mkdir -p fs-cook/core/debootstrap
           tar --extract --gzip --file "$archive" \
             --directory fs-cook/core/debootstrap --strip-components=1
@@ -64,15 +72,7 @@ jobs:
         run: |
           archive="fs-cook/out/plucky-gnomeRaw-arm64.tar.gz"
           test -s "$archive"
-          launcher_entry="$(tar -tzf "$archive" | grep -E '(^|/)usr/local/bin/udroid-gnome-x11
-      - name: Upload tested rootfs
-        uses: actions/upload-artifact@v4
-        with:
-          name: plucky-gnomeRaw-arm64
-          path: fs-cook/out/plucky-gnomeRaw-arm64.tar.gz
-          if-no-files-found: error
-          retention-days: 7
- | head -n 1)"
+          launcher_entry="$(tar -tzf "$archive" | grep -E '(^|/)usr/local/bin/udroid-gnome-x11$' | head -n 1)"
           test -n "$launcher_entry"
           tar -xOzf "$archive" "$launcher_entry" | grep -F 'GALLIUM_DRIVER=llvmpipe'
 
