@@ -1,9 +1,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/thatmg393/udroid-download/badge/main)](https://www.codefactor.io/repository/github/thatmg393/udroid-download/overview/main)
 
 # udroid-download
-
 An ( fs-cook & debootstrap ) wrapper to build udroid with cmdline.
-
 ## Ubuntu Plucky GNOME X11 image
 
 The `plucky/gnomeRaw` target builds an ARM64 Ubuntu Plucky GNOME desktop
