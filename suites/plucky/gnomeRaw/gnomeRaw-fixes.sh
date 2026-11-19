@@ -8,7 +8,7 @@ system-db:local
 PROFILE
 
 if command -v dconf >/dev/null 2>&1; then
-  dconf update
+  dconf update || true
 fi
 
 cat > /usr/local/bin/udroid-gnome-x11 <<'LAUNCH'
@@ -57,6 +57,11 @@ fi
 if command -v xdpyinfo >/dev/null 2>&1 &&
    ! xdpyinfo -display "$DISPLAY" >/dev/null 2>&1; then
   die "cannot connect to the X server at DISPLAY=$DISPLAY; start Termux:X11 first"
+fi
+
+# Ensure the machine ID exists before starting a system bus.
+if command -v dbus-uuidgen >/dev/null 2>&1; then
+  dbus-uuidgen --ensure=/etc/machine-id
 fi
 
 # Make sure the system bus is healthy without killing an already-working bus.
