@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Ee
 
 # fs-cook variant entry point for the Plucky GNOME X11 image.
 source plugins/envsetup
