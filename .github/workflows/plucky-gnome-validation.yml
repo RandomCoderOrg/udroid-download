@@ -1,15 +1,6 @@
 name: Plucky GNOME validation
 
 on:
-  push:
-    branches:
-      - feat/plucky-gnome-llvmpipe
-    paths:
-      - "suites/plucky/gnomeRaw/**"
-      - "tests/test_plucky_gnome.py"
-      - "gen_data/gen-suite-matrix.py"
-      - "build.sh"
-      - ".github/workflows/plucky-gnome-validation.yml"
   pull_request:
     paths:
       - "suites/plucky/gnomeRaw/**"
@@ -21,6 +12,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: plucky-gnome-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   validate-and-build:
