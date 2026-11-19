@@ -3,7 +3,6 @@
 # udroid-download
 An ( fs-cook & debootstrap ) wrapper to build udroid with cmdline.
 ## Ubuntu Plucky GNOME X11 image
-
 The `plucky/gnomeRaw` target builds an ARM64 Ubuntu Plucky GNOME desktop
 image for Termux:X11. GNOME is launched with Mesa's `llvmpipe` software
 renderer and GTK's Cairo renderer by default. The launcher clears conflicting
