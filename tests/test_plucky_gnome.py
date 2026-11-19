@@ -170,6 +170,7 @@ do_unmount() {
             # The launcher removes stale /run/dbus files before retrying.
             # Never let this unit test touch the host container's bus files.
             stub("rm", "#!/bin/sh\nexit 0\n")
+            stub("dbus-uuidgen", "#!/bin/sh\nexit 0\n")
             stub(
                 "service",
                 "#!/bin/sh\nprintf '%s\\n' \"$*\" > \"$SERVICE_RECORD\"\nexit 0\n",
