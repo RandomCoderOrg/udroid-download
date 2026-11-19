@@ -1,9 +1,11 @@
 import json
+import io
 import os
 from pathlib import Path
 import runpy
 import subprocess
 import sys
+import tarfile
 import tempfile
 import unittest
 from unittest import mock
@@ -86,6 +88,56 @@ do_unmount() { :; }
             sys.path.pop(0)
         name = "trixie-plasma-arm64.tar.gz"
         self.assertEqual(release["strip_info"](name), ["trixie", "plasma", "aarch64", name])
+
+    def test_catalogue_uses_os_release_from_completed_archives(self):
+        sys.path.insert(0, str(ROOT / "gen_data"))
+        try:
+            import utils
+            with tempfile.TemporaryDirectory() as directory:
+                archive_path = Path(directory) / "sid-raw-arm64.tar.gz"
+                with tarfile.open(archive_path, "w:gz") as archive:
+                    link = tarfile.TarInfo("/etc/os-release")
+                    link.type = tarfile.SYMTYPE
+                    link.linkname = "../usr/lib/os-release"
+                    archive.addfile(link)
+                    release = b"NAME=Debian GNU/Linux\nID=debian\n"
+                    file = tarfile.TarInfo("/usr/lib/os-release")
+                    file.size = len(release)
+                    archive.addfile(file, io.BytesIO(release))
+                distribution = utils.distribution_from_archive(str(archive_path))
+                self.assertEqual(distribution, "debian")
+                generated = utils.resolv_data({"suites": []}, "sid", "raw", [], distribution)
+                generated = utils.resolv_data(generated, "trixie", "gnome", [], distribution)
+                self.assertEqual(generated["sid"]["distribution"], "debian")
+                self.assertEqual(generated["trixie"]["distribution"], "debian")
+                with self.assertRaises(ValueError):
+                    utils.resolv_data(generated, "trixie", "plasma", [], "ubuntu")
+
+                ubuntu_path = Path(directory) / "resolute-raw-arm64.tar.gz"
+                with tarfile.open(ubuntu_path, "w:gz") as archive:
+                    release = b'NAME=Ubuntu\nID="ubuntu"\n'
+                    file = tarfile.TarInfo("/etc/os-release")
+                    file.size = len(release)
+                    archive.addfile(file, io.BytesIO(release))
+                self.assertEqual(utils.distribution_from_archive(str(ubuntu_path)), "ubuntu")
+        finally:
+            sys.path.pop(0)
+
+    def test_os_release_requires_a_valid_id(self):
+        sys.path.insert(0, str(ROOT / "gen_data"))
+        try:
+            import utils
+            with tempfile.TemporaryDirectory() as directory:
+                archive_path = Path(directory) / "image.tar.gz"
+                with tarfile.open(archive_path, "w:gz") as archive:
+                    release = b"NAME=Ubuntu\nID_LIKE=debian\n"
+                    file = tarfile.TarInfo("/etc/os-release")
+                    file.size = len(release)
+                    archive.addfile(file, io.BytesIO(release))
+                with self.assertRaises(ValueError):
+                    utils.distribution_from_archive(str(archive_path))
+        finally:
+            sys.path.pop(0)
 
 
 if __name__ == "__main__":

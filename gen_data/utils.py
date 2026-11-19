@@ -1,5 +1,27 @@
 import os
+import re
 import subprocess
+import tarfile
+
+
+def distribution_from_archive(path: str) -> str:
+    with tarfile.open(path, "r|gz") as archive:
+        for member in archive:
+            name = member.name.lstrip("/").removeprefix("./")
+            if name not in ("etc/os-release", "usr/lib/os-release"):
+                continue
+            if not member.isfile():
+                continue
+            release = archive.extractfile(member)
+            if release is None:
+                continue
+            for line in release.read().decode("utf-8").splitlines():
+                if line.startswith("ID="):
+                    distribution = line[3:].strip().strip("\"'")
+                    if re.fullmatch(r"[a-z0-9._-]+", distribution):
+                        return distribution
+                    raise ValueError(f"{path}: invalid os-release ID")
+    raise ValueError(f"{path}: no valid /etc/os-release or /usr/lib/os-release ID")
 
 def add_suite(JsonFile: dict, suite: str) -> None:
     """ Add suite to the JsonFile
@@ -52,6 +74,7 @@ def resolv_data(
        suite: str,
        variant: str,
        arch: list[str],
+       distribution: str,
        Name: str = ...,
        FriendlyName: str = ...,
     ) -> dict:
@@ -73,9 +96,14 @@ def resolv_data(
     
     if FriendlyName is ...:
         FriendlyName = f"{suite} {variant}"
-        
+
     if suite not in json_data["suites"]:
         add_suite(json_data,suite)
+
+    existing_distribution = json_data[suite].get("distribution")
+    if existing_distribution not in (None, distribution):
+        raise ValueError(f"{suite}: distribution changed from {existing_distribution} to {distribution}")
+    json_data[suite]["distribution"] = distribution
     
     if variant not in json_data[suite]["varients"]:
         add_varient(json_data, suite, variant, Name, FriendlyName)

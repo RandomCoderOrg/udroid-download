@@ -2,6 +2,8 @@ name: Build and Release
 on:
   schedule: [{cron: "1 1 1 * *"}]
   workflow_dispatch: { }
+  pull_request:
+    branches: [main]
   push:
     paths-ignore:
       - '**.md'
@@ -64,6 +66,7 @@ jobs:
         run: echo "matrix=$( python3 gen_data/gen-suite-matrix.py )" >> $GITHUB_OUTPUT
 
   suite-build:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04-arm
     needs: generate-matrix
     strategy:
@@ -107,6 +110,7 @@ jobs:
           path: fs-cook/out/${{ matrix.suite }}-${{ matrix.variant }}-**.tar.gz
 
   create-release:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04-arm
 
     needs: suite-build

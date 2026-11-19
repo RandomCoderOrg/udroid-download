@@ -15,7 +15,10 @@ def update_data_json(file_path: str) -> None:
     jdata = json.load(open(DISTRO_DATA_JSON, 'r'))
     
     # resolv data
-    jdata = utils.resolv_data(jdata, data[0], data[1], [data[2]])
+    jdata = utils.resolv_data(
+        jdata, data[0], data[1], [data[2]],
+        utils.distribution_from_archive(file_path),
+    )
     
     # update url
     jdata[data[0]]  \
