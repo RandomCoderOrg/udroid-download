@@ -139,7 +139,19 @@ do_unmount() {
                 [line for line in calls if line.startswith("unmount:")],
                 ["unmount:out/plucky-gnomeRaw-arm64"],
             )
-            self.assertEqual(\n                [line for line in calls if line.startswith("compress:")],\n                ["compress:out/plucky-gnomeRaw-arm64"],\n            )\n            self.assertLess(calls.index("build:out/plucky-gnomeRaw-arm64:arm64"), calls.index("compress:out/plucky-gnomeRaw-arm64"))\n            self.assertLess(calls.index("compress:out/plucky-gnomeRaw-arm64"), calls.index("unmount:out/plucky-gnomeRaw-arm64"))\n            self.assertTrue((cook / "out" / "plucky-gnomeRaw-arm64.tar.gz").is_file())
+            self.assertEqual(
+                [line for line in calls if line.startswith("compress:")],
+                ["compress:out/plucky-gnomeRaw-arm64"],
+            )
+            self.assertLess(
+                calls.index("build:out/plucky-gnomeRaw-arm64:arm64"),
+                calls.index("compress:out/plucky-gnomeRaw-arm64"),
+            )
+            self.assertLess(
+                calls.index("compress:out/plucky-gnomeRaw-arm64"),
+                calls.index("unmount:out/plucky-gnomeRaw-arm64"),
+            )
+            self.assertTrue((cook / "out" / "plucky-gnomeRaw-arm64.tar.gz").is_file())
             self.assertFalse((target / "tmp" / "gnomeRaw-setup.sh").exists())
 
     def test_launcher_overrides_virgl_and_starts_fresh_session_bus(self):
