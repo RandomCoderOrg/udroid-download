@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# PRoot does not provide systemd/logind. GNOME 48 may detect the installed
+# login1 service and ask D-Bus to start it; that activation fails inside
+# Android PRoot and aborts GNOME Shell initialization. Keep the service file
+# for reference, but move it out of D-Bus's system-services search directory.
+login1_service=/usr/share/dbus-1/system-services/org.freedesktop.login1.service
+if [[ -e "$login1_service" || -L "$login1_service" ]]; then
+  mkdir -p /root/login1-disabled
+  mv -f "$login1_service" /root/login1-disabled/
+fi
+
 mkdir -p /etc/profile.d /etc/dconf/profile /etc/dconf/db/local.d
 cat > /etc/dconf/profile/user <<'PROFILE'
 user-db:user
