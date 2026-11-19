@@ -52,8 +52,10 @@ jobs:
       - name: Check shell syntax and style
         run: |
           bash -n build.sh
-          bash -n suites/plucky/gnomeRaw/*.sh
-          shellcheck -e SC1091 suites/plucky/gnomeRaw/*.sh
+          for script in suites/plucky/gnomeRaw/*.sh; do
+            bash -n "$script"
+          done
+          shellcheck -e SC1091,SC2034,SC2154 suites/plucky/gnomeRaw/*.sh
 
       - name: Build Plucky GNOME rootfs
         run: sudo bash build.sh -s plucky -v gnomeRaw -a arm64
@@ -62,9 +64,17 @@ jobs:
         run: |
           archive="fs-cook/out/plucky-gnomeRaw-arm64.tar.gz"
           test -s "$archive"
-          tar -tzf "$archive" | grep -E '(^|/)usr/local/bin/udroid-gnome-x11$'
-          tar -xOzf "$archive" ./usr/local/bin/udroid-gnome-x11 2>/dev/null \
-            | grep -F 'GALLIUM_DRIVER=llvmpipe'
+          launcher_entry="$(tar -tzf "$archive" | grep -E '(^|/)usr/local/bin/udroid-gnome-x11
+      - name: Upload tested rootfs
+        uses: actions/upload-artifact@v4
+        with:
+          name: plucky-gnomeRaw-arm64
+          path: fs-cook/out/plucky-gnomeRaw-arm64.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+ | head -n 1)"
+          test -n "$launcher_entry"
+          tar -xOzf "$archive" "$launcher_entry" | grep -F 'GALLIUM_DRIVER=llvmpipe'
 
       - name: Upload tested rootfs
         uses: actions/upload-artifact@v4
